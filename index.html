@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Celebration of Life — Pastor Mike Adesoji Alabi">
+<title>Pastor Mike Adesoji Alabi — Celebration of Life</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2456; --navy-dark: #0F1535; --navy-mid: #243070;
+  --gold: #C8972A; --gold-light: #F0D080; --gold-dark: #8A6010;
+  --white: #FFFFFF; --cream: #FDF8EE;
+  --text-light: rgba(255,255,255,0.85); --text-dim: rgba(255,255,255,0.50);
+  --transition: 0.35s cubic-bezier(0.4,0,0.2,1);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Montserrat',sans-serif; background:var(--navy-dark); color:var(--white); overflow-x:hidden; }
+
+/* BG SLIDESHOW */
+#bg-slideshow { position:fixed; inset:0; z-index:0; }
+.bg-slide { position:absolute; inset:0; background-size:cover; background-position:center top; opacity:0; transition:opacity 2s ease-in-out; animation:slowZoom 14s ease-in-out infinite alternate; }
+.bg-slide.active { opacity:1; }
+@keyframes slowZoom { from{transform:scale(1)} to{transform:scale(1.07)} }
+.bg-overlay { position:fixed; inset:0; z-index:1; background:linear-gradient(to bottom,rgba(15,21,53,0.72) 0%,rgba(15,21,53,0.50) 40%,rgba(15,21,53,0.82) 85%,rgba(15,21,53,0.97) 100%); pointer-events:none; }
+
+/* NAV */
+nav { position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:0 2.5rem; height:64px; background:rgba(15,21,53,0.93); backdrop-filter:blur(14px); border-bottom:1px solid rgba(200,151,42,0.3); }
+.nav-brand { font-family:'Playfair Display',serif; font-size:0.88rem; font-weight:700; color:var(--gold); letter-spacing:0.04em; white-space:nowrap; }
+.nav-links { display:flex; gap:1.8rem; list-style:none; }
+.nav-links a { font-size:0.72rem; font-weight:600; color:var(--text-light); text-decoration:none; letter-spacing:0.15em; text-transform:uppercase; padding:0.25rem 0; border-bottom:1.5px solid transparent; transition:all var(--transition); }
+.nav-links a:hover, .nav-links a.active { color:var(--gold); border-bottom-color:var(--gold); }
+.nav-toggle { display:none; flex-direction:column; gap:5px; cursor:pointer; }
+.nav-toggle span { display:block; width:24px; height:1.5px; background:var(--gold); }
+
+/* APP */
+#app { position:relative; z-index:2; min-height:100vh; padding-top:64px; }
+.page { display:none; min-height:calc(100vh - 64px); }
+.page.active { display:block; }
+#page-home.active { display:flex; flex-direction:column; }
+
+/* HOME */
+.home-hero { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:3rem 1.5rem 2.5rem; text-align:center; min-height:calc(100vh - 64px); }
+.hero-cross { font-size:2rem; color:var(--gold); opacity:0.7; margin-bottom:1rem; animation:fadeUp 1.2s ease forwards; }
+.hero-eyebrow { font-size:0.72rem; font-weight:600; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold-light); margin-bottom:1rem; animation:fadeUp 1.2s ease 0.2s both; }
+.hero-title-tag { font-family:'EB Garamond',serif; font-size:1.3rem; font-style:italic; color:var(--gold); margin-bottom:0.2rem; animation:fadeUp 1.2s ease 0.35s both; }
+.hero-name-row { display:flex; align-items:baseline; justify-content:center; gap:0.65rem; flex-wrap:wrap; margin-bottom:0.3rem; animation:fadeUp 1.2s ease 0.5s both; }
+.hero-name { font-family:'Playfair Display',serif; font-size:clamp(2.2rem,6vw,4.2rem); font-weight:800; color:var(--white); line-height:1.05; letter-spacing:0.02em; text-shadow:0 4px 30px rgba(0,0,0,0.7); }
+.hero-mr-skill { font-family:'EB Garamond',serif; font-size:1.15rem; font-style:italic; color:rgba(200,151,42,0.8); white-space:nowrap; padding-bottom:0.5rem; }
+.hero-death-date { font-size:0.9rem; font-weight:500; color:rgba(255,255,255,0.72); letter-spacing:0.15em; margin-bottom:1.5rem; animation:fadeUp 1.2s ease 0.65s both; }
+.hero-divider { display:flex; align-items:center; gap:0.75rem; width:min(480px,85%); margin:0 auto 1.4rem; animation:fadeUp 1.2s ease 0.75s both; }
+.hero-div-line { flex:1; height:1.5px; background:linear-gradient(to var(--d,right),var(--gold),rgba(200,151,42,0.1)); }
+.hero-div-line.r { --d:left; }
+.hero-div-cross { color:var(--gold); font-size:1rem; }
+.hero-pills { display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center; margin-bottom:1.5rem; animation:fadeUp 1.2s ease 0.85s both; }
+.hero-pill { font-size:0.68rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--gold); border:1px solid rgba(200,151,42,0.45); padding:0.28rem 0.85rem; border-radius:50px; }
+.hero-verse { font-family:'EB Garamond',serif; font-size:clamp(1.05rem,2.5vw,1.35rem); font-style:italic; color:var(--cream); max-width:640px; line-height:1.8; animation:fadeUp 1.2s ease 1s both; text-shadow:0 2px 10px rgba(0,0,0,0.5); }
+.hero-verse cite { display:block; font-style:normal; font-size:0.72rem; letter-spacing:0.18em; color:var(--gold-light); text-transform:uppercase; margin-top:0.6rem; }
+.hero-cta { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; margin-top:2rem; animation:fadeUp 1.2s ease 1.2s both; }
+
+/* BUTTONS */
+.btn-gold { padding:0.85rem 2.2rem; background:var(--gold); color:var(--navy-dark); font-family:'Montserrat',sans-serif; font-size:0.78rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; border:none; border-radius:3px; cursor:pointer; transition:all var(--transition); }
+.btn-gold:hover { background:var(--gold-light); transform:translateY(-2px); box-shadow:0 8px 28px rgba(200,151,42,0.35); }
+.btn-outline { padding:0.85rem 2.2rem; background:transparent; color:var(--gold); font-family:'Montserrat',sans-serif; font-size:0.78rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; border:1.5px solid rgba(200,151,42,0.5); border-radius:3px; cursor:pointer; transition:all var(--transition); }
+.btn-outline:hover { border-color:var(--gold); background:rgba(200,151,42,0.08); transform:translateY(-2px); }
+
+/* SECTION */
+.section-wrap { max-width:1060px; margin:0 auto; padding:4.5rem 2rem; }
+.section-head { text-align:center; margin-bottom:3.5rem; }
+.section-eyebrow { display:block; font-size:0.68rem; font-weight:700; letter-spacing:0.3em; text-transform:uppercase; color:var(--gold); margin-bottom:0.7rem; }
+.section-title { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,2.8rem); font-weight:700; color:var(--white); margin-bottom:0.8rem; }
+.section-sub { font-family:'EB Garamond',serif; font-size:1.05rem; font-style:italic; color:var(--text-dim); max-width:520px; margin:0 auto; line-height:1.7; }
+.gold-line { width:56px; height:2px; background:var(--gold); margin:1.2rem auto 0; }
+
+/* PAGE BACKGROUNDS */
+#page-program, #page-gallery, #page-tributes, #page-support { background:rgba(15,21,53,0.62); }
+
+/* PROGRAMME */
+.program-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:1.5rem; margin-bottom:2.5rem; }
+.program-card { background:rgba(255,255,255,0.04); border:1px solid rgba(200,151,42,0.2); border-radius:8px; padding:1.8rem; position:relative; overflow:hidden; transition:all var(--transition); }
+.program-card::before { content:''; position:absolute; top:0;left:0;right:0; height:3px; background:linear-gradient(to right,var(--gold-dark),var(--gold),var(--gold-dark)); }
+.program-card:hover { transform:translateY(-4px); border-color:rgba(200,151,42,0.4); background:rgba(255,255,255,0.07); box-shadow:0 12px 40px rgba(0,0,0,0.4); }
+.card-icon { font-size:2rem; margin-bottom:0.9rem; }
+.card-event-name { font-family:'Playfair Display',serif; font-size:1.15rem; font-weight:700; color:var(--gold); margin-bottom:1.1rem; }
+.card-detail { display:flex; align-items:flex-start; gap:0.7rem; margin-bottom:0.8rem; }
+.card-detail-icon { color:var(--gold); font-size:0.85rem; margin-top:0.1rem; flex-shrink:0; }
+.card-detail-text { font-size:0.85rem; color:var(--text-light); line-height:1.55; }
+.card-detail-text strong { color:var(--white); display:block; font-size:0.92rem; margin-bottom:0.1rem; }
+.order-box { background:rgba(255,255,255,0.04); border:1px solid rgba(200,151,42,0.15); border-radius:8px; padding:2.5rem; margin-top:1.5rem; }
+.order-title { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--gold); text-align:center; margin-bottom:1.5rem; }
+.order-list { list-style:none; max-width:480px; margin:0 auto; }
+.order-list li { display:flex; align-items:center; gap:1rem; padding:0.65rem 0; border-bottom:1px solid rgba(255,255,255,0.06); font-size:0.88rem; color:var(--text-light); }
+.order-list li:last-child { border-bottom:none; }
+.order-num { font-family:'Playfair Display',serif; font-size:0.72rem; color:var(--gold); min-width:22px; }
+.rsvp-section { text-align:center; margin-top:3rem; }
+.rsvp-grid { display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; margin-top:1.5rem; }
+.rsvp-card { display:flex; align-items:center; gap:0.85rem; background:rgba(255,255,255,0.04); border:1px solid rgba(200,151,42,0.2); border-radius:7px; padding:1rem 1.5rem; text-decoration:none; transition:all var(--transition); min-width:210px; }
+.rsvp-card:hover { background:rgba(255,255,255,0.08); border-color:rgba(200,151,42,0.5); transform:translateY(-2px); }
+.rsvp-icon { font-size:1.4rem; }
+.rsvp-label { font-size:0.62rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); margin-bottom:0.15rem; }
+.rsvp-value { font-size:0.88rem; color:var(--white); font-weight:600; }
+
+/* GALLERY */
+.gallery-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:0.9rem; }
+.gallery-item { aspect-ratio:3/4; overflow:hidden; border-radius:5px; border:1px solid rgba(200,151,42,0.15); cursor:pointer; position:relative; background:var(--navy-mid); }
+.gallery-item img { width:100%; height:100%; object-fit:cover; object-position:top center; display:block; transition:transform 0.6s ease; pointer-events:none; user-select:none; -webkit-user-drag:none; }
+.gallery-item:hover img { transform:scale(1.05); }
+.gallery-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 55%); opacity:0; transition:opacity var(--transition); display:flex; align-items:flex-end; padding:0.85rem; }
+.gallery-item:hover .gallery-overlay { opacity:1; }
+.gallery-caption { font-family:'EB Garamond',serif; font-size:0.82rem; font-style:italic; color:var(--gold-light); }
+#lightbox { display:none; position:fixed; inset:0; z-index:999; background:rgba(0,0,0,0.96); align-items:center; justify-content:center; }
+#lightbox.open { display:flex; }
+#lb-img { max-width:88vw; max-height:88vh; object-fit:contain; border:1px solid rgba(200,151,42,0.2); pointer-events:none; user-select:none; -webkit-user-drag:none; }
+#lb-close { position:absolute; top:1.5rem; right:2rem; font-size:2rem; color:var(--gold); cursor:pointer; background:none; border:none; }
+.lb-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(200,151,42,0.15); border:1px solid rgba(200,151,42,0.3); color:var(--gold); font-size:1.6rem; width:48px; height:48px; display:flex; align-items:center; justify-content:center; cursor:pointer; border-radius:50%; transition:all var(--transition); }
+.lb-nav:hover { background:rgba(200,151,42,0.3); }
+#lb-prev { left:1.5rem; } #lb-next { right:1.5rem; }
+
+/* TRIBUTES */
+.tribute-layout { display:grid; grid-template-columns:1fr 1.4fr; gap:2.5rem; align-items:start; }
+.tribute-form-box { background:rgba(255,255,255,0.04); border:1px solid rgba(200,151,42,0.2); border-radius:8px; padding:2rem; }
+.form-group { margin-bottom:1.2rem; }
+.form-label { display:block; font-size:0.68rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--gold-light); margin-bottom:0.45rem; }
+.form-input, .form-textarea { width:100%; background:rgba(255,255,255,0.06); border:1px solid rgba(200,151,42,0.2); border-radius:4px; padding:0.75rem 1rem; color:var(--white); font-family:'Montserrat',sans-serif; font-size:0.88rem; outline:none; transition:border-color var(--transition); }
+.form-input:focus, .form-textarea:focus { border-color:var(--gold); background:rgba(255,255,255,0.09); }
+.form-input::placeholder, .form-textarea::placeholder { color:rgba(255,255,255,0.28); }
+.form-textarea { min-height:120px; resize:vertical; line-height:1.6; }
+.char-count { font-size:0.68rem; color:rgba(255,255,255,0.35); text-align:right; margin-top:0.25rem; }
+.rate-notice { display:none; background:rgba(200,151,42,0.1); border:1px solid rgba(200,151,42,0.3); border-radius:4px; padding:0.7rem 1rem; font-size:0.8rem; color:var(--gold-light); text-align:center; margin-bottom:1rem; }
+.tribute-feed { max-height:620px; overflow-y:auto; padding-right:0.4rem; }
+.tribute-feed::-webkit-scrollbar { width:3px; }
+.tribute-feed::-webkit-scrollbar-thumb { background:var(--gold-dark); border-radius:2px; }
+.tribute-count-row { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem; }
+.tribute-count { font-family:'Playfair Display',serif; font-size:0.9rem; color:var(--gold); }
+.tribute-entry { background:rgba(255,255,255,0.04); border:1px solid rgba(200,151,42,0.15); border-radius:6px; padding:1.2rem; margin-bottom:0.9rem; animation:fadeUp 0.5s ease forwards; }
+.tribute-entry-header { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.55rem; }
+.tribute-name { font-family:'Playfair Display',serif; font-size:0.95rem; color:var(--gold); }
+.tribute-meta { font-size:0.7rem; color:rgba(255,255,255,0.4); font-style:italic; }
+.tribute-date { font-size:0.68rem; color:rgba(255,255,255,0.35); }
+.tribute-text { font-family:'EB Garamond',serif; font-size:1.02rem; font-style:italic; color:var(--cream); line-height:1.7; }
+.tribute-empty { text-align:center; padding:3rem 1rem; font-family:'EB Garamond',serif; font-size:1.05rem; font-style:italic; color:rgba(255,255,255,0.35); }
+
+/* SUPPORT */
+.support-wrap { max-width:680px; margin:0 auto; }
+.support-message { background:rgba(255,255,255,0.04); border:1px solid rgba(200,151,42,0.2); border-radius:8px; padding:2rem 2.2rem; margin-bottom:2rem; font-family:'EB Garamond',serif; font-size:1.15rem; font-style:italic; color:var(--cream); line-height:1.85; text-align:center; }
+.bank-card { background:rgba(255,255,255,0.04); border:1px solid rgba(200,151,42,0.25); border-radius:8px; padding:2.2rem; margin-bottom:1.5rem; position:relative; overflow:hidden; }
+.bank-card::before { content:''; position:absolute; top:0;left:0;right:0; height:3px; background:linear-gradient(to right,var(--gold-dark),var(--gold),var(--gold-dark)); }
+.bank-icon { font-size:2.2rem; text-align:center; margin-bottom:0.75rem; }
+.bank-tag { font-size:0.68rem; font-weight:700; letter-spacing:0.25em; text-transform:uppercase; color:var(--gold); text-align:center; margin-bottom:1.5rem; }
+.bank-row { display:flex; justify-content:space-between; align-items:center; padding:0.8rem 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+.bank-row:last-child { border-bottom:none; }
+.bank-row-label { font-size:0.7rem; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:rgba(255,255,255,0.45); }
+.bank-row-value { font-size:1rem; font-weight:700; color:var(--white); }
+.copy-btn { background:rgba(200,151,42,0.12); border:1px solid rgba(200,151,42,0.3); color:var(--gold); font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:0.28rem 0.7rem; border-radius:3px; cursor:pointer; margin-left:0.75rem; transition:all var(--transition); }
+.copy-btn:hover { background:rgba(200,151,42,0.25); }
+.copy-btn.copied { background:rgba(74,200,80,0.18); border-color:rgba(74,200,80,0.4); color:#7dcea0; }
+.notify-box { background:rgba(200,151,42,0.07); border:1px solid rgba(200,151,42,0.15); border-radius:7px; padding:1.2rem 1.5rem; font-size:0.82rem; color:var(--text-light); line-height:1.7; text-align:center; }
+.notify-contacts { display:flex; flex-wrap:wrap; gap:0.85rem; justify-content:center; margin-top:1.2rem; }
+
+/* TOAST */
+#toast { position:fixed; bottom:2rem; right:2rem; z-index:9999; background:var(--navy-mid); border:1px solid rgba(200,151,42,0.4); border-radius:6px; padding:0.8rem 1.4rem; font-size:0.84rem; color:var(--white); opacity:0; transform:translateY(16px); transition:all 0.3s ease; pointer-events:none; max-width:300px; }
+#toast.show { opacity:1; transform:translateY(0); }
+
+/* FOOTER */
+footer { position:relative; z-index:2; text-align:center; padding:2.5rem 1.5rem; border-top:1px solid rgba(200,151,42,0.15); background:rgba(15,21,53,0.88); }
+.footer-cross { font-size:1.1rem; color:var(--gold); opacity:0.55; margin-bottom:0.6rem; }
+.footer-text { font-family:'EB Garamond',serif; font-size:0.95rem; font-style:italic; color:rgba(255,255,255,0.4); line-height:1.8; }
+.footer-copy { font-size:0.65rem; color:rgba(255,255,255,0.18); margin-top:0.8rem; letter-spacing:0.1em; }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+.scroll-fade { opacity:0; transform:translateY(28px); transition:opacity 0.7s ease,transform 0.7s ease; }
+.scroll-fade.visible { opacity:1; transform:translateY(0); }
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav { padding:0 1.25rem; }
+  .nav-links { display:none; flex-direction:column; position:absolute; top:64px;left:0;right:0; background:rgba(15,21,53,0.98); padding:1.5rem; gap:1.25rem; border-bottom:1px solid rgba(200,151,42,0.2); }
+  .nav-links.open { display:flex; }
+  .nav-toggle { display:flex; }
+  .tribute-layout { grid-template-columns:1fr; }
+  .section-wrap { padding:3rem 1.25rem; }
+  .gallery-grid { grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); }
+  #lb-prev,#lb-next { display:none; }
+  .program-grid { grid-template-columns:1fr; }
+  .hero-name { font-size:clamp(1.8rem,8vw,2.8rem); }
+}
+img { -webkit-user-drag:none; user-select:none; }
+</style>
+</head>
+<body>
+
+<div id="bg-slideshow"></div>
+<div class="bg-overlay"></div>
+
+<nav id="navbar">
+  <div class="nav-brand">Pastor Mike Adesoji Alabi</div>
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#" onclick="showPage('home')"     id="nav-home"     class="active">Home</a></li>
+    <li><a href="#" onclick="showPage('program')"  id="nav-program">Programme</a></li>
+    <li><a href="#" onclick="showPage('gallery')"  id="nav-gallery">Gallery</a></li>
+    <li><a href="#" onclick="showPage('tributes')" id="nav-tributes">Tributes</a></li>
+    <li><a href="#" onclick="showPage('support')"  id="nav-support">Support</a></li>
+    <li><a href="#" onclick="showPage('admin')" id="nav-admin" style="display:none">Admin</a></li>
+  </ul>
+  <div class="nav-toggle" onclick="toggleNav()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div id="app">
+
+<!-- HOME -->
+<section class="page active" id="page-home">
+  <div class="home-hero">
+    <div class="hero-cross">&#10013;</div>
+    <div class="hero-eyebrow">Celebration of Life</div>
+    <div class="hero-title-tag">Pastor</div>
+    <div class="hero-name-row">
+      <div class="hero-name">Mike, Adesoji Alabi</div>
+      <span class="hero-mr-skill">&mdash; Mr. Skill</span>
+    </div>
+    <div class="hero-death-date">Died on May 13th, 2026 &nbsp;&middot;&nbsp; Aged 57 Yrs</div>
+    <div class="hero-divider">
+      <div class="hero-div-line"></div>
+      <span class="hero-div-cross">&#10013;</span>
+      <div class="hero-div-line r"></div>
+    </div>
+    <div class="hero-pills">
+      <span class="hero-pill">Beloved Husband</span>
+      <span class="hero-pill">Brother</span>
+      <span class="hero-pill">Father</span>
+      <span class="hero-pill">Pastor</span>
+      <span class="hero-pill">Evangelist</span>
+      <span class="hero-pill">Philanthropist</span>
+    </div>
+    <blockquote class="hero-verse">
+      &ldquo;I have fought a good fight, I have finished my course, I have kept the faith&hellip;&rdquo;
+      <cite>2 Timothy 4:7&ndash;8 &nbsp;&middot;&nbsp; KJV</cite>
+    </blockquote>
+    <div class="hero-cta">
+      <button class="btn-gold"    onclick="showPage('program')">View Programme</button>
+      <button class="btn-outline" onclick="showPage('tributes')">Leave a Tribute</button>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMME -->
+<section class="page" id="page-program">
+  <div class="section-wrap">
+    <div class="section-head scroll-fade">
+      <span class="section-eyebrow">Homegoing Celebration</span>
+      <h2 class="section-title">Programme of Events</h2>
+      <p class="section-sub">Join us as we celebrate the life and legacy of a man who lived fully for God and family.</p>
+      <div class="gold-line"></div>
+    </div>
+    <div class="program-grid">
+      <div class="program-card scroll-fade">
+        <div class="card-icon">&#128337;</div>
+        <div class="card-event-name">Service of Songs</div>
+        <div class="card-detail"><span class="card-detail-icon">&#128197;</span><div class="card-detail-text"><strong>Thursday, 21st May 2026</strong>Evening Service</div></div>
+        <div class="card-detail"><span class="card-detail-icon">&#128336;</span><div class="card-detail-text"><strong>5:00 PM</strong>Doors open from 4:30 PM</div></div>
+        <div class="card-detail"><span class="card-detail-icon">&#128205;</span><div class="card-detail-text"><strong>RCCG Kings Court Parish</strong>Plot M2F Sani Abacha Drive, Along Camp Peace Hotel Road, Saburi 2 Dei-Dei, Abuja</div></div>
+      </div>
+      <div class="program-card scroll-fade">
+        <div class="card-icon">&#127807;</div>
+        <div class="card-event-name">Burial Service</div>
+        <div class="card-detail"><span class="card-detail-icon">&#128197;</span><div class="card-detail-text"><strong>Friday, 22nd May 2026</strong>Morning Service</div></div>
+        <div class="card-detail"><span class="card-detail-icon">&#128336;</span><div class="card-detail-text"><strong>10:00 AM</strong>Doors open from 9:00 AM</div></div>
+        <div class="card-detail"><span class="card-detail-icon">&#128205;</span><div class="card-detail-text"><strong>RCCG Desire of Nations Parish</strong>Plot 496, Obafemi Awolowo Way / 14 I.T. Igbani Street, Jabi, Abuja</div></div>
+      </div>
+      <div class="program-card scroll-fade">
+        <div class="card-icon">&#128330;</div>
+        <div class="card-event-name">Lowering &amp; Interment</div>
+        <div class="card-detail"><span class="card-detail-icon">&#128197;</span><div class="card-detail-text"><strong>Friday, 22nd May 2026</strong>Immediately After Burial Service</div></div>
+        <div class="card-detail"><span class="card-detail-icon">&#128205;</span><div class="card-detail-text"><strong>Gudu Christian Cemetery</strong>Gudu, Abuja</div></div>
+      </div>
+    </div>
+    <div class="order-box scroll-fade">
+      <div class="order-title">Order of Service &mdash; Burial Ceremony</div>
+      <ul class="order-list">
+        <li><span class="order-num">01</span>Processional &amp; Opening</li>
+        <li><span class="order-num">02</span>Opening Prayer</li>
+        <li><span class="order-num">03</span>Hymns of Praise</li>
+        <li><span class="order-num">04</span>Scripture Reading</li>
+        <li><span class="order-num">05</span>Tributes &amp; Eulogies</li>
+        <li><span class="order-num">06</span>Worship in Song</li>
+        <li><span class="order-num">07</span>Sermon</li>
+        <li><span class="order-num">08</span>Closing Prayer &amp; Benediction</li>
+        <li><span class="order-num">09</span>Recessional</li>
+        <li><span class="order-num">10</span>Interment &mdash; Gudu Christian Cemetery</li>
+      </ul>
+    </div>
+    <div class="rsvp-section scroll-fade">
+      <span class="section-eyebrow">RSVP &amp; Enquiries</span>
+      <p style="font-family:'EB Garamond',serif;font-size:1.05rem;font-style:italic;color:var(--text-dim);margin-top:0.4rem;">Please confirm your attendance with the family</p>
+      <div class="rsvp-grid">
+        <a href="tel:+2348135242245" class="rsvp-card"><span class="rsvp-icon">&#128222;</span><div><div class="rsvp-label">Phone</div><div class="rsvp-value">+234 813 524 2245</div></div></a>
+        <a href="https://wa.me/2349029587976" target="_blank" class="rsvp-card"><span class="rsvp-icon">&#128172;</span><div><div class="rsvp-label">WhatsApp</div><div class="rsvp-value">09029587976</div></div></a>
+        <a href="mailto:prosperalabi7@gmail.com" class="rsvp-card"><span class="rsvp-icon">&#9993;</span><div><div class="rsvp-label">Email</div><div class="rsvp-value">prosperalabi7@gmail.com</div></div></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="page" id="page-gallery">
+  <div class="section-wrap">
+    <div class="section-head scroll-fade">
+      <span class="section-eyebrow">A Life Well Lived</span>
+      <h2 class="section-title">Photo Gallery</h2>
+      <p class="section-sub">Cherished moments from the life of Pastor Mike Adesoji Alabi.</p>
+      <div class="gold-line"></div>
+    </div>
+    <div class="gallery-grid" id="gallery-grid">
+      <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-dim);font-style:italic;font-family:'EB Garamond',serif;">Loading gallery&hellip;</div>
+    </div>
+  </div>
+</section>
+
+<!-- TRIBUTES -->
+<section class="page" id="page-tributes">
+  <div class="section-wrap">
+    <div class="section-head scroll-fade">
+      <span class="section-eyebrow">Share Your Heart</span>
+      <h2 class="section-title">Condolence Register</h2>
+      <p class="section-sub">Leave a message of love, remembrance, and comfort for the Alabi family.</p>
+      <div class="gold-line"></div>
+    </div>
+    <div class="tribute-layout">
+      <div class="tribute-form-box scroll-fade">
+        <div class="rate-notice" id="rate-notice">&#9203; Please wait a moment before submitting again.</div>
+        <div class="form-group"><label class="form-label">Your Name *</label><input class="form-input" id="t-name" type="text" placeholder="Enter your full name" maxlength="100"></div>
+        <div class="form-group"><label class="form-label">Location (optional)</label><input class="form-input" id="t-location" type="text" placeholder="City, Country" maxlength="100"></div>
+        <div class="form-group"><label class="form-label">Relationship (optional)</label><input class="form-input" id="t-relation" type="text" placeholder="e.g. Church member, Friend" maxlength="100"></div>
+        <div class="form-group">
+          <label class="form-label">Your Tribute / Message *</label>
+          <textarea class="form-textarea" id="t-msg" placeholder="Share a memory, tribute, or words of comfort&hellip;" maxlength="600"></textarea>
+          <div class="char-count"><span id="char-ct">0</span>/600</div>
+        </div>
+        <button class="btn-gold" onclick="submitTribute()" style="width:100%">Submit Tribute</button>
+      </div>
+      <div class="scroll-fade">
+        <div class="tribute-count-row">
+          <span class="tribute-count"><span id="tribute-total">0</span> Tributes Received</span>
+        </div>
+        <div class="tribute-feed" id="tribute-feed">
+          <div class="tribute-empty" id="tribute-empty">"Be the first to leave a tribute for Pastor Mike&hellip;"</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPORT -->
+<section class="page" id="page-support">
+  <div class="section-wrap">
+    <div class="section-head scroll-fade">
+      <span class="section-eyebrow">From the Family</span>
+      <h2 class="section-title">Support the Family</h2>
+      <div class="gold-line"></div>
+    </div>
+    <div class="support-wrap">
+      <div class="support-message scroll-fade">
+        &ldquo;Pastor Mike gave so generously throughout his life &mdash; to his church, his community, and everyone he met.
+        We are not asking for anything. But for those family members and loved ones who feel led to honour his memory
+        in a practical way during this season, the details below are available to you.
+        Every act of love is deeply appreciated by our family.&rdquo;
+        <br><br>
+        <span style="font-family:'Montserrat',sans-serif;font-size:0.78rem;font-style:normal;color:var(--gold);font-weight:600;letter-spacing:0.1em;">&mdash; THE ALABI FAMILY</span>
+      </div>
+      <div class="bank-card scroll-fade">
+        <div class="bank-icon">&#127974;</div>
+        <div class="bank-tag">First Bank of Nigeria PLC</div>
+        <div class="bank-row">
+          <span class="bank-row-label">Account Name</span>
+          <div style="display:flex;align-items:center;"><span class="bank-row-value" id="acc-name">Alabi Olukemi Adepeju</span><button class="copy-btn" onclick="copyText('acc-name',this)">Copy</button></div>
+        </div>
+        <div class="bank-row">
+          <span class="bank-row-label">Account Number</span>
+          <div style="display:flex;align-items:center;"><span class="bank-row-value" id="acc-num">2012077481</span><button class="copy-btn" onclick="copyText('acc-num',this)">Copy</button></div>
+        </div>
+        <div class="bank-row">
+          <span class="bank-row-label">Bank</span>
+          <span class="bank-row-value">First Bank PLC</span>
+        </div>
+      </div>
+      <div class="notify-box scroll-fade">
+        <p style="margin-bottom:0.5rem;">If you do make a transfer, kindly let the family know so they can acknowledge your kindness.</p>
+        <div class="notify-contacts">
+          <a href="https://wa.me/2349029587976" target="_blank" class="rsvp-card" style="min-width:unset;"><span class="rsvp-icon">&#128172;</span><div><div class="rsvp-label">WhatsApp</div><div class="rsvp-value">09029587976</div></div></a>
+          <a href="tel:+2348135242245" class="rsvp-card" style="min-width:unset;"><span class="rsvp-icon">&#128222;</span><div><div class="rsvp-label">Call</div><div class="rsvp-value">+234 813 524 2245</div></div></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="page" id="page-admin">
+  <div class="section-wrap">
+    <div class="section-head scroll-fade">
+      <span class="section-eyebrow">Family Access Only</span>
+      <h2 class="section-title">Photo Manager</h2>
+      <p class="section-sub">Upload photos, manage the gallery, and select which 20 appear in the background slideshow.</p>
+      <div class="gold-line"></div>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,151,42,0.2);border-radius:8px;padding:1.8rem;margin-bottom:2rem;" class="scroll-fade">
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin-bottom:1.2rem;">Upload New Photo</div>
+      <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;">
+        <div style="flex:1;min-width:180px;"><label class="form-label">Photo File</label><input type="file" id="upload-file" accept="image/*" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(200,151,42,0.2);border-radius:4px;padding:0.65rem 1rem;color:var(--white);font-size:0.85rem;"></div>
+        <div style="flex:1;min-width:180px;"><label class="form-label">Caption</label><input class="form-input" id="upload-caption" type="text" placeholder="e.g. Christmas 2024" maxlength="200"></div>
+        <button class="btn-gold" onclick="uploadPhoto()">Upload</button>
+      </div>
+      <div id="upload-progress" style="display:none;margin-top:0.8rem;font-size:0.82rem;color:var(--gold-light);">Uploading and processing...</div>
+    </div>
+    <div style="display:flex;gap:1.5rem;margin-bottom:1.5rem;flex-wrap:wrap;" class="scroll-fade">
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,151,42,0.2);border-radius:6px;padding:0.85rem 1.5rem;text-align:center;">
+        <div style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--gold);" id="admin-total">&#8212;</div>
+        <div style="font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);">Total Photos</div>
+      </div>
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,151,42,0.2);border-radius:6px;padding:0.85rem 1.5rem;text-align:center;">
+        <div style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--gold);" id="admin-bg-count">&#8212;/20</div>
+        <div style="font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-dim);">In BG Rotation</div>
+      </div>
+    </div>
+    <div class="gallery-grid" id="admin-grid"></div>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <div class="footer-cross">&#10013;</div>
+  <div class="footer-text">In Loving Memory of Pastor Mike Adesoji Alabi<br>Died May 13th, 2026 &middot; &ldquo;I have kept the faith&rdquo; &middot; 2 Timothy 4:7</div>
+  <div class="footer-copy">&copy; 2026 Alabi Family &middot; All Rights Reserved</div>
+</footer>
+
+<div id="lightbox">
+  <button id="lb-close" onclick="closeLightbox()">&#10005;</button>
+  <button class="lb-nav" id="lb-prev" onclick="lbNav(-1)">&#8249;</button>
+  <img id="lb-img" src="" alt="Gallery photo">
+  <button class="lb-nav" id="lb-next" onclick="lbNav(1)">&#8250;</button>
+</div>
+<div id="toast"></div>
+
+<script>
+let photos = [], lbIndex = 0;
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  document.getElementById('nav-links').classList.remove('open');
+  window.scrollTo({top:0, behavior:'smooth'});
+  setTimeout(checkScrollFade, 120);
+  if (name === 'gallery')  loadGallery();
+  if (name === 'tributes') loadTributes();
+}
+
+function toggleNav() { document.getElementById('nav-links').classList.toggle('open'); }
+
+/* BG slideshow */
+let bgIdx = 0, bgSlides = [];
+function initBg(list) {
+  const el = document.getElementById('bg-slideshow');
+  el.innerHTML = ''; bgSlides = [];
+  list.forEach((p, i) => {
+    const d = document.createElement('div');
+    d.className = 'bg-slide' + (i === 0 ? ' active' : '');
+    d.style.backgroundImage = `url('${p.url}')`;
+    el.appendChild(d); bgSlides.push(d);
+  });
+  if (bgSlides.length > 1) {
+    setInterval(() => {
+      bgSlides[bgIdx].classList.remove('active');
+      bgIdx = (bgIdx + 1) % bgSlides.length;
+      bgSlides[bgIdx].classList.add('active');
+    }, 6000);
+  }
+}
+
+/* Gallery */
+async function loadGallery() {
+  try {
+    const res = await fetch('/api/photos');
+    photos = await res.json();
+    const grid = document.getElementById('gallery-grid');
+    if (!photos.length) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-dim);font-style:italic;font-family:EB Garamond,serif;">No photos yet.</div>'; return; }
+    grid.innerHTML = '';
+    photos.forEach((p, i) => {
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      item.innerHTML = `<img src="${p.url}" alt="${p.caption||''}" loading="lazy" draggable="false"><div class="gallery-overlay"><span class="gallery-caption">${p.caption||''}</span></div>`;
+      item.addEventListener('click', () => openLightbox(i));
+      item.addEventListener('contextmenu', e => e.preventDefault());
+      grid.appendChild(item);
+    });
+  } catch(e) { console.error(e); }
+}
+
+function openLightbox(i) { lbIndex=i; document.getElementById('lb-img').src=photos[i].url; document.getElementById('lightbox').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); document.body.style.overflow=''; }
+function lbNav(dir) { lbIndex=(lbIndex+dir+photos.length)%photos.length; document.getElementById('lb-img').src=photos[lbIndex].url; }
+document.getElementById('lightbox').addEventListener('click', function(e){ if(e.target===this) closeLightbox(); });
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if(e.key==='Escape') closeLightbox();
+  if(e.key==='ArrowLeft') lbNav(-1);
+  if(e.key==='ArrowRight') lbNav(1);
+});
+document.getElementById('lb-img').addEventListener('contextmenu', e => e.preventDefault());
+
+/* Tributes */
+async function loadTributes() {
+  try {
+    const data = await (await fetch('/api/tributes')).json();
+    document.getElementById('tribute-total').textContent = data.length;
+    const feed = document.getElementById('tribute-feed');
+    if (!data.length) { feed.innerHTML = '<div class="tribute-empty">"Be the first to leave a tribute for Pastor Mike\u2026"</div>'; return; }
+    feed.innerHTML = '';
+    data.forEach(t => {
+      const div = document.createElement('div');
+      div.className = 'tribute-entry';
+      div.innerHTML = `<div class="tribute-entry-header"><div><div class="tribute-name">${t.name}</div><div class="tribute-meta">${[t.location,t.relation].filter(Boolean).join(' \u00b7 ')}</div></div><div class="tribute-date">${t.date}</div></div><div class="tribute-text">\u201c${t.message}\u201d</div>`;
+      feed.appendChild(div);
+    });
+  } catch(e) { console.error(e); }
+}
+
+document.getElementById('t-msg').addEventListener('input', function(){ document.getElementById('char-ct').textContent = this.value.length; });
+
+async function submitTribute() {
+  const name=document.getElementById('t-name').value.trim(), msg=document.getElementById('t-msg').value.trim();
+  if(!name){showToast('Please enter your name.');return;}
+  if(!msg){showToast('Please write your message.');return;}
+  const fd=new FormData();
+  fd.append('name',name); fd.append('location',document.getElementById('t-location').value.trim());
+  fd.append('relation',document.getElementById('t-relation').value.trim()); fd.append('message',msg);
+  try {
+    const res=await fetch('/api/tributes',{method:'POST',body:fd});
+    if(res.status===429){document.getElementById('rate-notice').style.display='block';setTimeout(()=>document.getElementById('rate-notice').style.display='none',5000);return;}
+    if(!res.ok){const e=await res.json();showToast(e.detail||'Error submitting.');return;}
+    ['t-name','t-location','t-relation','t-msg'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('char-ct').textContent='0';
+    showToast('\u2713 Your tribute has been received. Thank you.');
+    loadTributes();
+  } catch(e){showToast('Network error. Please try again.');}
+}
+
+function copyText(id,btn){
+  navigator.clipboard.writeText(document.getElementById(id).textContent).then(()=>{
+    btn.textContent='\u2713 Copied';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('copied');},2500);
+    showToast('Copied to clipboard!');
+  });
+}
+
+let toastTimer;
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),3500);}
+
+function checkScrollFade(){document.querySelectorAll('.scroll-fade').forEach(el=>{if(el.getBoundingClientRect().top<window.innerHeight-60)el.classList.add('visible');});}
+window.addEventListener('scroll',checkScrollFade);
+document.addEventListener('contextmenu',e=>{if(e.target.tagName==='IMG')e.preventDefault();});
+
+async function init(){
+  try{
+    const r=await fetch('/api/photos');
+    photos=await r.json();
+    const bgR=await fetch('/api/photos/bg');
+    const bgPhotos=await bgR.json();
+    if(bgPhotos.length) initBg(bgPhotos);
+    else if(photos.length) initBg(photos);
+  }catch(e){}
+  checkScrollFade();
+}
+init();
+
+// ADMIN
+let _adminBuf='';
+document.addEventListener('keypress',e=>{
+  _adminBuf=(_adminBuf+e.key).slice(-5);
+  if(_adminBuf==='admin'){document.getElementById('nav-admin').style.display='block';showToast('Admin mode enabled');}
+});
+
+async function loadAdmin(){
+  try{
+    const [gR,bR]=await Promise.all([fetch('/api/photos'),fetch('/api/photos/bg')]);
+    const all=await gR.json(), bg=await bR.json();
+    const bgIds=new Set(bg.map(p=>p.id));
+    document.getElementById('admin-total').textContent=all.length;
+    document.getElementById('admin-bg-count').textContent=bgIds.size+'/20';
+    const grid=document.getElementById('admin-grid');
+    grid.innerHTML='';
+    all.forEach(p=>{
+      const isBg=bgIds.has(p.id)||p.bg_rotation;
+      const d=document.createElement('div');
+      d.className='gallery-item'; d.style.cursor='default';
+      d.innerHTML=`<img src="${p.url}" alt="" loading="lazy" draggable="false" style="pointer-events:none;">
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.88) 0%,transparent 55%);display:flex;flex-direction:column;justify-content:flex-end;padding:0.7rem;gap:0.35rem;">
+          <div style="font-size:0.68rem;color:rgba(240,208,128,0.9);font-style:italic;font-family:'EB Garamond',serif;">${p.caption||'No caption'}</div>
+          <div style="display:flex;gap:0.35rem;">
+            <button onclick="toggleBg(${p.id},${!isBg})" style="flex:1;padding:0.28rem 0.3rem;font-size:0.58rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;border:none;border-radius:3px;cursor:pointer;background:${isBg?'#C8972A':'rgba(255,255,255,0.18)'};color:${isBg?'#1A1208':'#fff'};">${isBg?'&#9733; BG ON':'&#9734; BG OFF'}</button>
+            <button onclick="deletePhoto(${p.id})" style="padding:0.28rem 0.5rem;font-size:0.6rem;font-weight:700;background:rgba(200,50,50,0.75);color:#fff;border:none;border-radius:3px;cursor:pointer;">&#10005;</button>
+          </div>
+        </div>`;
+      d.addEventListener('contextmenu',e=>e.preventDefault());
+      grid.appendChild(d);
+    });
+  }catch(e){console.error(e);}
+}
+
+async function toggleBg(id,enable){
+  const res=await fetch('/api/photos/'+id+'/bg?enabled='+enable,{method:'PATCH'});
+  if(!res.ok){const e=await res.json();showToast(e.detail||'Error');return;}
+  showToast(enable?'Added to BG rotation':'Removed from BG rotation');
+  loadAdmin();
+}
+
+async function deletePhoto(id){
+  if(!confirm('Delete this photo permanently?'))return;
+  const res=await fetch('/api/photos/'+id,{method:'DELETE'});
+  if(!res.ok){showToast('Error deleting');return;}
+  showToast('Photo deleted'); loadAdmin();
+}
+
+async function uploadPhoto(){
+  const fi=document.getElementById('upload-file');
+  const cap=document.getElementById('upload-caption').value.trim();
+  if(!fi.files[0]){showToast('Select a photo first.');return;}
+  const prog=document.getElementById('upload-progress');
+  prog.style.display='block';
+  const fd=new FormData();
+  fd.append('file',fi.files[0]); fd.append('caption',cap);
+  try{
+    const res=await fetch('/api/photos',{method:'POST',body:fd});
+    prog.style.display='none';
+    if(!res.ok){const e=await res.json();showToast(e.detail||'Upload failed');return;}
+    fi.value=''; document.getElementById('upload-caption').value='';
+    showToast('&#10003; Photo uploaded!'); loadAdmin();
+  }catch(e){prog.style.display='none';showToast('Upload error');}
+}
+
+const _origShow=showPage;
+window.showPage=function(name){_origShow(name);if(name==='admin')loadAdmin();};
+
+</script>
+</body>
+</html>
