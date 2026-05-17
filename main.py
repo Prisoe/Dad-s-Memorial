@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Request, Depends, HTTPException, UploadFile, File, Form
-import zipfile, tempfile
+import zipfile, tempfile, shutil, re
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -107,24 +107,31 @@ def process_photo(src_path: str, dest_path: str, target_w=600, target_h=800):
     img.save(dest_path, "JPEG", quality=82, optimize=True)
 
 def _seed_photos_if_empty():
-    """Seed DB from whatever .jpg files already exist in static/uploads/."""
+    """
+    On first run:
+    1. Copy photos from repo static/uploads/ into persistent UPLOAD_DIR
+    2. Seed the DB with all photos found in UPLOAD_DIR
+    """
     db = next(get_db())
     if db.query(Photo).count() > 0:
         db.close()
         return
 
-    captions = [
-        "A portrait of Pastor Mike", "The Alabi family portrait",
-        "Regal in gold", "Quiet strength", "At the RCCG pulpit",
-        "With his beloved", "The church family", "Family and faith",
-        "A cherished memory", "Portrait of a pastor",
-        "A man of dignity", "Joy that lights every room",
-        "Ministering with open hands", "With family after service",
-        "A loving partnership", "Dressed in grace",
-        "Sharp and dapper", "Christmas celebration",
-        "Always smiling", "A man at peace",
-    ]
+    # Copy from repo static/uploads into persistent disk if they differ
+    repo_uploads = os.path.join(BASE_DIR, "static", "uploads")
+    if os.path.exists(repo_uploads) and repo_uploads != UPLOAD_DIR:
+        copied = 0
+        for fname in os.listdir(repo_uploads):
+            if fname.lower().endswith(('.jpg', '.jpeg', '.png', '.webp')):
+                src = os.path.join(repo_uploads, fname)
+                dst = os.path.join(UPLOAD_DIR, fname)
+                if not os.path.exists(dst):
+                    shutil.copy2(src, dst)
+                    copied += 1
+        if copied:
+            print(f"✓ Copied {copied} photos from repo → {UPLOAD_DIR}")
 
+    # Seed DB from UPLOAD_DIR
     files = sorted([
         f for f in os.listdir(UPLOAD_DIR)
         if f.lower().endswith(('.jpg', '.jpeg', '.png', '.webp'))
@@ -132,19 +139,25 @@ def _seed_photos_if_empty():
 
     if not files:
         db.close()
-        print("⚠ No photos found in uploads folder to seed.")
+        print("⚠ No photos found to seed.")
         return
 
     for i, fname in enumerate(files):
-        caption = captions[i] if i < len(captions) else f"Photo {i+1}"
-        db.add(Photo(filename=fname, caption=caption, sort_order=i, active=True, bg_rotation=(i < 20)))
+        caption = os.path.splitext(fname)[0].replace('_', ' ').replace('-', ' ')
+        caption = re.sub(r'\b[a-f0-9]{6,}\b', '', caption).strip()
+        caption = caption if caption else f"Photo {i+1}"
+        db.add(Photo(
+            filename=fname,
+            caption=caption[:200],
+            sort_order=i,
+            active=True,
+            bg_rotation=(i < 20)
+        ))
 
     db.commit()
     db.close()
-    print(f"✓ Photos seeded: {len(files)} photos from uploads folder")
+    print(f"✓ Seeded {len(files)} photos from {UPLOAD_DIR}")
 
-
-# ── Routes ─────────────────────────────────────────────────
 
 @app.get("/", response_class=HTMLResponse)
 async def index():
