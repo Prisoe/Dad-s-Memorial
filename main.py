@@ -39,7 +39,7 @@ def startup():
 
 
 # ── Helpers ────────────────────────────────────────────────
-MAX_TRIBUTE_LEN = 600
+MAX_TRIBUTE_LEN = 3000
 RATE_LIMIT_SECS = 60
 ALLOWED_EXT     = {".jpg", ".jpeg", ".png", ".webp"}
 
@@ -213,6 +213,28 @@ async def post_tribute(
     record_rate_limit(ip, "tribute", db)
 
     return {"success": True, "id": tribute.id}
+
+@app.patch("/api/tributes/{tribute_id}")
+async def edit_tribute(
+    tribute_id: int,
+    name:     str = Form(...),
+    location: str = Form(""),
+    relation: str = Form(""),
+    message:  str = Form(...),
+    db: Session = Depends(get_db)
+):
+    t = db.query(Tribute).filter(Tribute.id == tribute_id).first()
+    if not t:
+        raise HTTPException(404, "Tribute not found.")
+    t.name     = sanitize(name, 100)
+    t.location = sanitize(location, 100)
+    t.relation = sanitize(relation, 100)
+    t.message  = sanitize(message, MAX_TRIBUTE_LEN)
+    if not t.name or not t.message:
+        raise HTTPException(400, "Name and message are required.")
+    db.commit()
+    return {"success": True}
+
 
 @app.delete("/api/tributes/{tribute_id}")
 def delete_tribute(tribute_id: int, db: Session = Depends(get_db)):

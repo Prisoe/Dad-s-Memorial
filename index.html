@@ -336,8 +336,8 @@ img { -webkit-user-drag:none; user-select:none; }
         <div class="form-group"><label class="form-label">Relationship (optional)</label><input class="form-input" id="t-relation" type="text" placeholder="e.g. Church member, Friend" maxlength="100"></div>
         <div class="form-group">
           <label class="form-label">Your Tribute / Message *</label>
-          <textarea class="form-textarea" id="t-msg" placeholder="Share a memory, tribute, or words of comfort&hellip;" maxlength="600"></textarea>
-          <div class="char-count"><span id="char-ct">0</span>/600</div>
+          <textarea class="form-textarea" id="t-msg" placeholder="Share a memory, tribute, or words of comfort&hellip;" maxlength="3000"></textarea>
+          <div class="char-count"><span id="char-ct">0</span>/3000</div>
         </div>
         <button class="btn-gold" onclick="submitTribute()" style="width:100%">Submit Tribute</button>
       </div>
@@ -416,8 +416,45 @@ img { -webkit-user-drag:none; user-select:none; }
       </div>
     </div>
     <div class="gallery-grid" id="admin-grid"></div>
+
+    <!-- Tributes Management -->
+    <div style="margin-top:3rem;" class="scroll-fade">
+      <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold);margin-bottom:0.5rem;">Tribute Manager</div>
+      <p style="font-size:0.82rem;color:var(--text-dim);margin-bottom:1.5rem;">View, edit or delete submitted tributes.</p>
+      <div id="admin-tribute-count" style="font-size:0.82rem;color:var(--gold-light);margin-bottom:1rem;"></div>
+      <div id="admin-tributes-list"></div>
+    </div>
   </div>
 </section>
+
+<!-- Edit Tribute Modal -->
+<div id="edit-modal" style="display:none;position:fixed;inset:0;z-index:9998;background:rgba(0,0,0,0.85);align-items:center;justify-content:center;">
+  <div style="background:var(--navy-mid);border:1px solid rgba(200,151,42,0.3);border-radius:8px;padding:2rem;width:min(560px,92vw);position:relative;">
+    <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin-bottom:1.2rem;">Edit Tribute</div>
+    <input type="hidden" id="edit-tribute-id">
+    <div class="form-group">
+      <label class="form-label">Name</label>
+      <input class="form-input" id="edit-name" type="text" maxlength="100">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Location</label>
+      <input class="form-input" id="edit-location" type="text" maxlength="100">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Relationship</label>
+      <input class="form-input" id="edit-relation" type="text" maxlength="100">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Message</label>
+      <textarea class="form-textarea" id="edit-message" maxlength="3000" style="min-height:160px;"></textarea>
+      <div class="char-count"><span id="edit-char-ct">0</span>/3000</div>
+    </div>
+    <div style="display:flex;gap:0.75rem;margin-top:1rem;">
+      <button class="btn-gold" onclick="saveEditTribute()" style="flex:1;">Save Changes</button>
+      <button class="btn-outline" onclick="closeEditModal()" style="flex:1;">Cancel</button>
+    </div>
+  </div>
+</div>
 
 </div>
 
