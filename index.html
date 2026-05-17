@@ -364,14 +364,47 @@ img { -webkit-user-drag:none; user-select:none; }
       <div class="gold-line"></div>
     </div>
     <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,151,42,0.2);border-radius:8px;padding:1.8rem;margin-bottom:2rem;" class="scroll-fade">
-      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--gold);margin-bottom:1.2rem;">Upload New Photo</div>
-      <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;">
-        <div style="flex:1;min-width:180px;"><label class="form-label">Photo File</label><input type="file" id="upload-file" accept="image/*" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(200,151,42,0.2);border-radius:4px;padding:0.65rem 1rem;color:var(--white);font-size:0.85rem;"></div>
-        <div style="flex:1;min-width:180px;"><label class="form-label">Caption</label><input class="form-input" id="upload-caption" type="text" placeholder="e.g. Christmas 2024" maxlength="200"></div>
-        <button class="btn-gold" onclick="uploadPhoto()">Upload</button>
+
+      <!-- Tab buttons -->
+      <div style="display:flex;gap:0.75rem;margin-bottom:1.4rem;">
+        <button onclick="switchUploadTab('single')" id="tab-single" class="btn-gold" style="font-size:0.72rem;padding:0.5rem 1.2rem;">Single Photo</button>
+        <button onclick="switchUploadTab('bulk')" id="tab-bulk" class="btn-outline" style="font-size:0.72rem;padding:0.5rem 1.2rem;">&#128230; Bulk ZIP Upload</button>
       </div>
+
+      <!-- Single upload -->
+      <div id="panel-single">
+        <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;">
+          <div style="flex:1;min-width:180px;"><label class="form-label">Photo File</label><input type="file" id="upload-file" accept="image/*" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(200,151,42,0.2);border-radius:4px;padding:0.65rem 1rem;color:var(--white);font-size:0.85rem;"></div>
+          <div style="flex:1;min-width:180px;"><label class="form-label">Caption</label><input class="form-input" id="upload-caption" type="text" placeholder="e.g. Christmas 2024" maxlength="200"></div>
+          <button class="btn-gold" onclick="uploadPhoto()">Upload</button>
+        </div>
+      </div>
+
+      <!-- Bulk upload -->
+      <div id="panel-bulk" style="display:none;">
+        <p style="font-size:0.82rem;color:var(--text-dim);margin-bottom:1rem;line-height:1.6;">
+          Select your <strong style="color:var(--gold-light);">.zip file</strong> containing all photos. They will all be processed, rotated to portrait, and added to the gallery automatically.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;">
+          <div style="flex:1;min-width:200px;">
+            <label class="form-label">ZIP File</label>
+            <input type="file" id="bulk-file" accept=".zip" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(200,151,42,0.2);border-radius:4px;padding:0.65rem 1rem;color:var(--white);font-size:0.85rem;">
+          </div>
+          <button class="btn-gold" onclick="uploadBulk()">&#128230; Upload All</button>
+        </div>
+        <div id="bulk-progress" style="display:none;margin-top:1rem;">
+          <div style="font-size:0.82rem;color:var(--gold-light);margin-bottom:0.5rem;" id="bulk-status">Uploading and processing — please wait, this may take a minute...</div>
+          <div style="width:100%;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;">
+            <div id="bulk-bar" style="height:100%;background:var(--gold);width:0%;transition:width 0.3s;animation:bulkPulse 1.5s ease-in-out infinite;"></div>
+          </div>
+        </div>
+      </div>
+
       <div id="upload-progress" style="display:none;margin-top:0.8rem;font-size:0.82rem;color:var(--gold-light);">Uploading and processing...</div>
     </div>
+    <style>
+    @keyframes bulkPulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+    </style>
     <div style="display:flex;gap:1.5rem;margin-bottom:1.5rem;flex-wrap:wrap;" class="scroll-fade">
       <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,151,42,0.2);border-radius:6px;padding:0.85rem 1.5rem;text-align:center;">
         <div style="font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--gold);" id="admin-total">&#8212;</div>
@@ -536,6 +569,71 @@ async function init(){
 init();
 
 // ADMIN
+
+function switchUploadTab(tab) {
+  document.getElementById('panel-single').style.display = tab==='single' ? 'block' : 'none';
+  document.getElementById('panel-bulk').style.display  = tab==='bulk'   ? 'block' : 'none';
+  document.getElementById('tab-single').className = tab==='single' ? 'btn-gold' : 'btn-outline';
+  document.getElementById('tab-bulk').className   = tab==='bulk'   ? 'btn-gold' : 'btn-outline';
+  document.getElementById('tab-single').style.cssText = 'font-size:0.72rem;padding:0.5rem 1.2rem;';
+  document.getElementById('tab-bulk').style.cssText   = 'font-size:0.72rem;padding:0.5rem 1.2rem;';
+}
+
+async function uploadBulk() {
+  const fi = document.getElementById('bulk-file');
+  if (!fi.files[0]) { showToast('Please select a .zip file first.'); return; }
+
+  const prog   = document.getElementById('bulk-progress');
+  const status = document.getElementById('bulk-status');
+  const bar    = document.getElementById('bulk-bar');
+
+  prog.style.display = 'block';
+  bar.style.width = '15%';
+  status.textContent = 'Uploading zip file...';
+
+  const fd = new FormData();
+  fd.append('file', fi.files[0]);
+
+  try {
+    // Animate bar while waiting
+    let pct = 15;
+    const ticker = setInterval(() => {
+      pct = Math.min(pct + 3, 88);
+      bar.style.width = pct + '%';
+    }, 800);
+
+    status.textContent = 'Processing photos — please wait...';
+    const res = await fetch('/api/photos/bulk', { method: 'POST', body: fd });
+
+    clearInterval(ticker);
+    bar.style.width = '100%';
+
+    if (!res.ok) {
+      const e = await res.json();
+      status.textContent = '✗ ' + (e.detail || 'Upload failed');
+      bar.style.background = '#e74c3c';
+      return;
+    }
+
+    const data = await res.json();
+    status.textContent = data.message;
+    bar.style.background = '#27ae60';
+    fi.value = '';
+
+    if (data.errors && data.errors.length) {
+      console.warn('Some files had errors:', data.errors);
+    }
+
+    showToast(data.message);
+    setTimeout(() => { prog.style.display='none'; bar.style.width='0%'; bar.style.background='var(--gold)'; }, 3000);
+    loadAdmin();
+
+  } catch(e) {
+    status.textContent = '✗ Network error — check your connection.';
+    bar.style.background = '#e74c3c';
+  }
+}
+
 let _adminBuf='';
 document.addEventListener('keypress',e=>{
   _adminBuf=(_adminBuf+e.key).slice(-5);

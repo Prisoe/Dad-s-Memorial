@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Request, Depends, HTTPException, UploadFile, File, Form
+import zipfile, tempfile
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.middleware.cors import CORSMiddleware
@@ -250,6 +251,76 @@ def get_photos(db: Session = Depends(get_db)):
         {"id": p.id, "url": f"/uploads/{p.filename}", "caption": p.caption, "bg_rotation": p.bg_rotation}
         for p in photos
     ]
+
+@app.post("/api/photos/bulk")
+async def bulk_upload_photos(
+    request: Request,
+    file: UploadFile = File(...),
+    db: Session = Depends(get_db)
+):
+    """Upload a zip file containing multiple photos — processes all at once."""
+    if not file.filename.lower().endswith('.zip'):
+        raise HTTPException(400, "Please upload a .zip file.")
+
+    # Save zip to temp location
+    with tempfile.TemporaryDirectory() as tmpdir:
+        zip_path = os.path.join(tmpdir, "upload.zip")
+        with open(zip_path, "wb") as f:
+            content = await file.read()
+            f.write(content)
+
+        # Check it's a valid zip
+        if not zipfile.is_zipfile(zip_path):
+            raise HTTPException(400, "Invalid zip file.")
+
+        processed, skipped, errors = [], [], []
+        max_order = db.query(Photo).count()
+
+        with zipfile.ZipFile(zip_path, 'r') as zf:
+            members = [
+                m for m in zf.namelist()
+                if not m.startswith('__MACOSX')
+                and not os.path.basename(m).startswith('.')
+                and os.path.splitext(m)[1].lower() in {'.jpg','.jpeg','.png','.webp'}
+            ]
+
+            for member in members:
+                try:
+                    # Extract to temp
+                    tmp_src = os.path.join(tmpdir, os.path.basename(member))
+                    with zf.open(member) as src, open(tmp_src, 'wb') as dst:
+                        dst.write(src.read())
+
+                    # Process to portrait
+                    dest_name = f"photo_{uuid.uuid4().hex[:12]}.jpg"
+                    dest_path = os.path.join(UPLOAD_DIR, dest_name)
+                    process_photo(tmp_src, dest_path)
+
+                    # Save to DB
+                    caption = os.path.splitext(os.path.basename(member))[0].replace('_',' ').replace('-',' ')
+                    db.add(Photo(
+                        filename=dest_name,
+                        caption=caption[:200],
+                        sort_order=max_order,
+                        active=True,
+                        bg_rotation=False
+                    ))
+                    max_order += 1
+                    processed.append(os.path.basename(member))
+
+                except Exception as e:
+                    errors.append(f"{os.path.basename(member)}: {str(e)}")
+
+        db.commit()
+
+    return {
+        "success": True,
+        "processed": len(processed),
+        "skipped": len(skipped),
+        "errors": errors,
+        "message": f"✓ {len(processed)} photos uploaded successfully."
+    }
+
 
 @app.post("/api/photos")
 async def upload_photo(
