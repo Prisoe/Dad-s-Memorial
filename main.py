@@ -11,8 +11,10 @@ from database import get_db, create_tables, Tribute, Photo, RateLimit
 
 # ── App setup ──────────────────────────────────────────────
 BASE_DIR    = os.path.dirname(os.path.abspath(__file__))
-UPLOAD_DIR  = os.path.join(BASE_DIR, "static", "uploads")
-os.makedirs(os.path.join(BASE_DIR, "static"), exist_ok=True)
+# Use /data (Render persistent disk) if available, else local
+DATA_DIR    = "/data" if os.path.exists("/data") else BASE_DIR
+UPLOAD_DIR  = os.path.join(DATA_DIR, "uploads")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 app = FastAPI(title="Pastor Mike Alabi Memorial")
@@ -25,6 +27,9 @@ app.add_middleware(
 )
 
 app.mount("/static", StaticFiles(directory=os.path.join(BASE_DIR, "static")), name="static")
+# Serve uploaded photos from persistent disk
+from starlette.staticfiles import StaticFiles as SF
+app.mount("/uploads", SF(directory=UPLOAD_DIR), name="uploads")
 
 @app.on_event("startup")
 def startup():
@@ -217,7 +222,7 @@ def get_bg_photos(db: Session = Depends(get_db)):
         photos = db.query(Photo).filter(Photo.active == True)\
                    .order_by(Photo.sort_order).limit(20).all()
     return [
-        {"id": p.id, "url": f"/static/uploads/{p.filename}", "caption": p.caption}
+        {"id": p.id, "url": f"/uploads/{p.filename}", "caption": p.caption}
         for p in photos
     ]
 
@@ -242,7 +247,7 @@ def get_photos(db: Session = Depends(get_db)):
     photos = db.query(Photo).filter(Photo.active == True)\
                .order_by(Photo.sort_order).all()
     return [
-        {"id": p.id, "url": f"/static/uploads/{p.filename}", "caption": p.caption, "bg_rotation": p.bg_rotation}
+        {"id": p.id, "url": f"/uploads/{p.filename}", "caption": p.caption, "bg_rotation": p.bg_rotation}
         for p in photos
     ]
 

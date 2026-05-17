@@ -5,7 +5,9 @@ from datetime import datetime
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATABASE_URL = f"sqlite:///{BASE_DIR}/memorial.db"
+# Use /data (Render persistent disk) if available, else local
+DATA_DIR = "/data" if os.path.exists("/data") else BASE_DIR
+DATABASE_URL = f"sqlite:///{DATA_DIR}/memorial.db"
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
