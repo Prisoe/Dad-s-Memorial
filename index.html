@@ -736,7 +736,70 @@ async function uploadPhoto(){
 }
 
 const _origShow=showPage;
-window.showPage=function(name){_origShow(name);if(name==='admin')loadAdmin();};
+window.showPage=function(name){_origShow(name);if(name==='admin'){loadAdmin();loadAdminTributes();}}
+
+
+// ═══ TRIBUTE ADMIN ═══
+async function loadAdminTributes() {
+  try {
+    const res = await fetch('/api/tributes');
+    const data = await res.json();
+    const list = document.getElementById('admin-tributes-list');
+    const countEl = document.getElementById('admin-tribute-count');
+    if (!list) return;
+    countEl.textContent = data.length + ' tribute' + (data.length !== 1 ? 's' : '') + ' received';
+    if (!data.length) { list.innerHTML = '<div class="tribute-empty">No tributes yet.</div>'; return; }
+    list.innerHTML = '';
+    data.forEach(t => {
+      const div = document.createElement('div');
+      div.className = 'tribute-entry';
+      const enc = encodeURIComponent(JSON.stringify(t));
+      div.innerHTML = `<div class="tribute-entry-header"><div><div class="tribute-name">${t.name}</div><div class="tribute-meta">${[t.location,t.relation].filter(Boolean).join(' · ')}</div></div><div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap;"><div class="tribute-date">${t.date}</div><button onclick="openEditTribute(${t.id},'${enc}')" style="padding:0.28rem 0.65rem;font-size:0.62rem;font-weight:700;background:rgba(200,151,42,0.2);color:var(--gold);border:1px solid rgba(200,151,42,0.4);border-radius:3px;cursor:pointer;">✏ Edit</button><button onclick="deleteAdminTribute(${t.id})" style="padding:0.28rem 0.65rem;font-size:0.62rem;font-weight:700;background:rgba(200,50,50,0.2);color:#f87171;border:1px solid rgba(200,50,50,0.4);border-radius:3px;cursor:pointer;">✕ Delete</button></div></div><div class="tribute-text">&#x201C;${t.message}&#x201D;</div>`;
+      list.appendChild(div);
+    });
+  } catch(e) { console.error('loadAdminTributes error:',e); }
+}
+
+function openEditTribute(id,encoded){
+  try{
+    const t=JSON.parse(decodeURIComponent(encoded));
+    document.getElementById('edit-tribute-id').value=id;
+    document.getElementById('edit-name').value=t.name||'';
+    document.getElementById('edit-location').value=t.location||'';
+    document.getElementById('edit-relation').value=t.relation||'';
+    document.getElementById('edit-message').value=t.message||'';
+    document.getElementById('edit-char-ct').textContent=(t.message||'').length;
+    document.getElementById('edit-modal').style.display='flex';
+  }catch(e){showToast('Error opening tribute');}
+}
+
+function closeEditModal(){document.getElementById('edit-modal').style.display='none';}
+
+document.getElementById('edit-message').addEventListener('input',function(){document.getElementById('edit-char-ct').textContent=this.value.length;});
+document.getElementById('edit-modal').addEventListener('click',function(e){if(e.target===this)closeEditModal();});
+
+async function saveEditTribute(){
+  const id=document.getElementById('edit-tribute-id').value;
+  const fd=new FormData();
+  fd.append('name',document.getElementById('edit-name').value.trim());
+  fd.append('location',document.getElementById('edit-location').value.trim());
+  fd.append('relation',document.getElementById('edit-relation').value.trim());
+  fd.append('message',document.getElementById('edit-message').value.trim());
+  try{
+    const res=await fetch('/api/tributes/'+id,{method:'PATCH',body:fd});
+    if(!res.ok){const e=await res.json();showToast(e.detail||'Error');return;}
+    showToast('✓ Tribute updated');closeEditModal();loadAdminTributes();loadTributes();
+  }catch(e){showToast('Network error');}
+}
+
+async function deleteAdminTribute(id){
+  if(!confirm('Delete this tribute permanently?'))return;
+  try{
+    const res=await fetch('/api/tributes/'+id,{method:'DELETE'});
+    if(!res.ok){showToast('Error deleting');return;}
+    showToast('Tribute deleted');loadAdminTributes();loadTributes();
+  }catch(e){showToast('Network error');}
+}
 
 </script>
 </body>
