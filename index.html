@@ -202,6 +202,7 @@ img { -webkit-user-drag:none; user-select:none; }
     <li><a href="#" onclick="showPage('program')"  id="nav-program">Programme</a></li>
     <li><a href="#" onclick="showPage('gallery')"  id="nav-gallery">Gallery</a></li>
     <li><a href="#" onclick="showPage('tributes')" id="nav-tributes">Tributes</a></li>
+    <li><a href="#" onclick="showPage('livestream')" id="nav-livestream" style="color:var(--gold-light);">&#128250; Live</a></li>
     <li><a href="#" onclick="showPage('admin')" id="nav-admin" style="display:none">Admin</a></li>
   </ul>
   <div class="nav-toggle" onclick="toggleNav()">
@@ -262,6 +263,7 @@ img { -webkit-user-drag:none; user-select:none; }
         <div class="card-detail"><span class="card-detail-icon">&#128197;</span><div class="card-detail-text"><strong>Thursday, 21st May 2026</strong>Evening Service</div></div>
         <div class="card-detail"><span class="card-detail-icon">&#128336;</span><div class="card-detail-text"><strong>5:00 PM</strong>Doors open from 4:30 PM</div></div>
         <div class="card-detail"><span class="card-detail-icon">&#128205;</span><div class="card-detail-text"><strong>RCCG Kings Court Parish</strong>Plot M2F Sani Abacha Drive, Along Camp Peace Hotel Road, Saburi 2 Dei-Dei, Abuja</div></div>
+        <div class="card-detail"><span class="card-detail-icon">&#128250;</span><div class="card-detail-text" id="prog-stream-1">Live stream available — <a href="#" onclick="showPage('livestream')" style="color:var(--gold);font-weight:600;">Watch here</a></div></div>
       </div>
       <div class="program-card scroll-fade">
         <div class="card-icon">&#127807;</div>
@@ -269,6 +271,7 @@ img { -webkit-user-drag:none; user-select:none; }
         <div class="card-detail"><span class="card-detail-icon">&#128197;</span><div class="card-detail-text"><strong>Friday, 22nd May 2026</strong>Morning Service</div></div>
         <div class="card-detail"><span class="card-detail-icon">&#128336;</span><div class="card-detail-text"><strong>10:00 AM</strong>Doors open from 9:00 AM</div></div>
         <div class="card-detail"><span class="card-detail-icon">&#128205;</span><div class="card-detail-text"><strong>RCCG Desire of Nations Parish</strong>Plot 496, Obafemi Awolowo Way / 14 I.T. Igbani Street, Jabi, Abuja</div></div>
+        <div class="card-detail"><span class="card-detail-icon">&#128250;</span><div class="card-detail-text" id="prog-stream-2">Live stream available — <a href="#" onclick="showPage('livestream')" style="color:var(--gold);font-weight:600;">Watch here</a></div></div>
       </div>
       <div class="program-card scroll-fade">
         <div class="card-icon">&#128330;</div>
@@ -455,6 +458,100 @@ img { -webkit-user-drag:none; user-select:none; }
     </div>
   </div>
 </div>
+
+
+<section class="page" id="page-livestream">
+  <div class="section-wrap">
+    <div class="section-head scroll-fade">
+      <span class="section-eyebrow">Join Us Wherever You Are</span>
+      <h2 class="section-title">Live Stream</h2>
+      <p class="section-sub">Watch the services of Pastor Mike Adesoji Alabi live from anywhere in the world.</p>
+      <div class="gold-line"></div>
+    </div>
+
+    <!-- Event stream cards -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-bottom:3rem;">
+
+      <!-- Service of Songs -->
+      <div class="program-card scroll-fade" id="stream-card-1">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+          <div class="card-icon" style="margin:0;">&#128337;</div>
+          <span id="stream-badge-1" style="display:none;font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;background:#e74c3c;color:#fff;padding:0.25rem 0.7rem;border-radius:50px;animation:livePulse 1.5s ease-in-out infinite;">&#9679; LIVE NOW</span>
+        </div>
+        <div class="card-event-name">Service of Songs</div>
+        <div class="card-detail">
+          <span class="card-detail-icon">&#128197;</span>
+          <div class="card-detail-text"><strong>Thursday, 21st May 2026 &nbsp;·&nbsp; 5:00 PM</strong>RCCG Kings Court Parish, Saburi 2 Dei-Dei, Abuja</div>
+        </div>
+        <div class="card-detail">
+          <span class="card-detail-icon">&#128250;</span>
+          <div class="card-detail-text" id="stream-info-1">Streamed live on YouTube by RCCG Kings Court Parish. Click below to watch.</div>
+        </div>
+        <div style="margin-top:1.2rem;">
+          <button id="stream-btn-1" onclick="openStream(STREAM_URLS.thursday)"
+            style="width:100%;padding:0.85rem;background:rgba(200,151,42,0.15);border:1.5px solid rgba(200,151,42,0.4);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:all 0.3s;"
+            disabled>
+            &#128250; Stream Coming Soon
+          </button>
+        </div>
+      </div>
+
+      <!-- Burial Service -->
+      <div class="program-card scroll-fade" id="stream-card-2">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.75rem;">
+          <div class="card-icon" style="margin:0;">&#127807;</div>
+          <span id="stream-badge-2" style="display:none;font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;background:#e74c3c;color:#fff;padding:0.25rem 0.7rem;border-radius:50px;animation:livePulse 1.5s ease-in-out infinite;">&#9679; LIVE NOW</span>
+        </div>
+        <div class="card-event-name">Burial Service</div>
+        <div class="card-detail">
+          <span class="card-detail-icon">&#128197;</span>
+          <div class="card-detail-text"><strong>Friday, 22nd May 2026 &nbsp;·&nbsp; 10:00 AM</strong>RCCG Desire of Nations Parish, Jabi, Abuja</div>
+        </div>
+        <div class="card-detail">
+          <span class="card-detail-icon">&#128250;</span>
+          <div class="card-detail-text" id="stream-info-2">Streamed live on YouTube by RCCG Desire of Nations. Click below to watch.</div>
+        </div>
+        <div style="margin-top:1.2rem;">
+          <button id="stream-btn-2" onclick="openStream(STREAM_URLS.friday)"
+            style="width:100%;padding:0.85rem;background:rgba(200,151,42,0.15);border:1.5px solid rgba(200,151,42,0.4);color:var(--gold);font-family:'Montserrat',sans-serif;font-size:0.78rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;border-radius:4px;cursor:pointer;transition:all 0.3s;"
+            disabled>
+            &#128250; Stream Coming Soon
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Embedded player area — shows when stream is live -->
+    <div id="stream-embed-area" style="display:none;" class="scroll-fade">
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,151,42,0.2);border-radius:8px;overflow:hidden;">
+        <div style="padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(200,151,42,0.15);">
+          <span style="font-family:'Playfair Display',serif;font-size:1rem;color:var(--gold);" id="embed-title">Live Service</span>
+          <span style="font-size:0.65rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;background:#e74c3c;color:#fff;padding:0.25rem 0.7rem;border-radius:50px;animation:livePulse 1.5s ease-in-out infinite;">&#9679; LIVE</span>
+        </div>
+        <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;">
+          <iframe id="stream-iframe"
+            style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
+            src="" allowfullscreen allow="autoplay; encrypted-media">
+          </iframe>
+        </div>
+      </div>
+    </div>
+
+    <!-- How to watch -->
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(200,151,42,0.12);border-radius:8px;padding:2rem;margin-top:2rem;text-align:center;" class="scroll-fade">
+      <div style="font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--gold);margin-bottom:0.75rem;">How to Watch</div>
+      <p style="font-family:'EB Garamond',serif;font-size:1rem;font-style:italic;color:var(--text-dim);line-height:1.8;max-width:520px;margin:0 auto;">
+        Click the stream button above when the service begins. You can also share the link with family and friends who cannot attend in person. No account required — just click and watch.
+      </p>
+    </div>
+
+  </div>
+</section>
+
+<style>
+@keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+</style>
 
 </div>
 
@@ -800,6 +897,57 @@ async function deleteAdminTribute(id){
     showToast('Tribute deleted');loadAdminTributes();loadTributes();
   }catch(e){showToast('Network error');}
 }
+
+
+// ═══ LIVESTREAM ═══
+// Replace STREAM_URL_THURSDAY and STREAM_URL_FRIDAY with real URLs when ready
+const STREAM_URLS = {
+  thursday: 'https://www.youtube.com/@KCPConnectAbuja',
+  friday:   'https://www.youtube.com/@rccgdonabuja'
+};
+
+function openStream(url) {
+  if (!url || url.startsWith('STREAM_URL')) {
+    showToast('Stream link not yet available — check back closer to the service.');
+    return;
+  }
+  // If it's a direct video/live URL, embed it; if it's a channel URL, open in new tab
+  const embedArea = document.getElementById('stream-embed-area');
+  const iframe    = document.getElementById('stream-iframe');
+  const isEmbeddable = url.includes('watch?v=') || url.includes('youtu.be/') || url.includes('/live/') || url.includes('facebook.com/') && url.includes('/videos/');
+  if (isEmbeddable) {
+    let embedUrl = url;
+    embedUrl = embedUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/').replace('/live/', '/embed/');
+    iframe.src = embedUrl;
+    embedArea.style.display = 'block';
+    embedArea.scrollIntoView({behavior:'smooth'});
+  } else {
+    window.open(url, '_blank');
+  }
+}
+
+function activateStream(event, url, title) {
+  // Call this when stream goes live: activateStream('thursday', 'https://...', 'Service of Songs')
+  const num = event === 'thursday' ? '1' : '2';
+  const btn   = document.getElementById('stream-btn-' + num);
+  const badge = document.getElementById('stream-badge-' + num);
+  const info  = document.getElementById('stream-info-' + num);
+  if (btn) {
+    btn.disabled = false;
+    btn.style.background = '#e74c3c';
+    btn.style.borderColor = '#e74c3c';
+    btn.style.color = '#fff';
+    btn.textContent = '\u25CF WATCH LIVE NOW';
+    btn.onclick = () => openStream(url);
+  }
+  if (badge) badge.style.display = 'inline-block';
+  if (info)  info.innerHTML = 'Stream is live! Click the button below to watch. &nbsp;<strong style="color:var(--gold-light);">Share with family & friends.</strong>';
+  STREAM_URLS[event] = url;
+}
+
+// To go live, open browser console and run:
+// activateStream('thursday', 'YOUR_STREAM_URL', 'Service of Songs')
+// activateStream('friday', 'YOUR_STREAM_URL', 'Burial Service')
 
 </script>
 </body>
