@@ -911,6 +911,11 @@ function openStream(url) {
     showToast('Stream link not yet available — check back closer to the service.');
     return;
   }
+  // Always open channel URLs in new tab
+  if (url.includes('@') || url.includes('/channel/') || url.includes('/c/')) {
+    window.open(url, '_blank');
+    return;
+  }
   // If it's a direct video/live URL, embed it; if it's a channel URL, open in new tab
   const embedArea = document.getElementById('stream-embed-area');
   const iframe    = document.getElementById('stream-iframe');
