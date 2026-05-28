@@ -198,12 +198,13 @@ img { -webkit-user-drag:none; user-select:none; }
 <nav id="navbar">
   <div class="nav-brand">Pastor Mike Adesoji Alabi</div>
   <ul class="nav-links" id="nav-links">
-    <li><a href="#" onclick="showPage('home')"     id="nav-home"     class="active">Home</a></li>
-    <li><a href="#" onclick="showPage('program')"  id="nav-program">Programme</a></li>
-    <li><a href="#" onclick="showPage('gallery')"  id="nav-gallery">Gallery</a></li>
-    <li><a href="#" onclick="showPage('tributes')" id="nav-tributes">Tributes</a></li>
+    <li><a href="#" onclick="showPage('home')"       id="nav-home"       class="active">Home</a></li>
+    <li><a href="#" onclick="showPage('biography')"  id="nav-biography">Biography</a></li>
+    <li><a href="#" onclick="showPage('program')"    id="nav-program">Programme</a></li>
+    <li><a href="#" onclick="showPage('gallery')"    id="nav-gallery">Gallery</a></li>
+    <li><a href="#" onclick="showPage('tributes')"   id="nav-tributes">Tributes</a></li>
     <li><a href="#" onclick="showPage('livestream')" id="nav-livestream" style="color:var(--gold-light);">&#128250; Live</a></li>
-    <li><a href="#" onclick="showPage('admin')" id="nav-admin" style="display:none">Admin</a></li>
+    <li><a href="#" onclick="showPage('admin')"      id="nav-admin"      style="display:none">Admin</a></li>
   </ul>
   <div class="nav-toggle" onclick="toggleNav()">
     <span></span><span></span><span></span>
@@ -316,8 +317,24 @@ img { -webkit-user-drag:none; user-select:none; }
       <p class="section-sub">Cherished moments from the life of Pastor Mike Adesoji Alabi.</p>
       <div class="gold-line"></div>
     </div>
-    <div class="gallery-grid" id="gallery-grid">
-      <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-dim);font-style:italic;font-family:'EB Garamond',serif;">Loading gallery&hellip;</div>
+    <!-- Gallery tabs -->
+    <div style="display:flex;gap:0.75rem;margin-bottom:2rem;" class="scroll-fade">
+      <button onclick="switchGalleryTab('photos')" id="gtab-photos" class="btn-gold" style="font-size:0.72rem;padding:0.5rem 1.4rem;">&#128247; Photos</button>
+      <button onclick="switchGalleryTab('videos')" id="gtab-videos" class="btn-outline" style="font-size:0.72rem;padding:0.5rem 1.4rem;">&#127916; Videos</button>
+    </div>
+
+    <!-- Photos grid -->
+    <div id="gallery-panel-photos">
+      <div class="gallery-grid" id="gallery-grid">
+        <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-dim);font-style:italic;font-family:'EB Garamond',serif;">Loading gallery&hellip;</div>
+      </div>
+    </div>
+
+    <!-- Videos grid -->
+    <div id="gallery-panel-videos" style="display:none;">
+      <div id="video-gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;">
+        <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-dim);font-style:italic;font-family:'EB Garamond',serif;" id="video-empty">No videos added yet. Add video links from the admin panel.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -419,6 +436,26 @@ img { -webkit-user-drag:none; user-select:none; }
       </div>
     </div>
     <div class="gallery-grid" id="admin-grid"></div>
+
+    <!-- Video Management -->
+    <div style="margin-top:3rem;" class="scroll-fade">
+      <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold);margin-bottom:0.5rem;">Video Manager</div>
+      <p style="font-size:0.82rem;color:var(--text-dim);margin-bottom:1.5rem;">Add YouTube or video links to the gallery video tab.</p>
+      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,151,42,0.2);border-radius:8px;padding:1.5rem;margin-bottom:1.5rem;">
+        <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;">
+          <div style="flex:2;min-width:200px;">
+            <label class="form-label">YouTube / Video URL</label>
+            <input class="form-input" id="video-url-input" type="url" placeholder="https://www.youtube.com/watch?v=...">
+          </div>
+          <div style="flex:1;min-width:150px;">
+            <label class="form-label">Title</label>
+            <input class="form-input" id="video-title-input" type="text" placeholder="e.g. Service of Songs 2026" maxlength="100">
+          </div>
+          <button class="btn-gold" onclick="addVideo()">Add Video</button>
+        </div>
+      </div>
+      <div id="admin-video-list"></div>
+    </div>
 
     <!-- Tributes Management -->
     <div style="margin-top:3rem;" class="scroll-fade">
@@ -549,6 +586,160 @@ img { -webkit-user-drag:none; user-select:none; }
 
 <style>
 @keyframes livePulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+</style>
+
+
+<section class="page" id="page-biography">
+  <div class="section-wrap" style="max-width:820px;">
+    <div class="section-head scroll-fade">
+      <span class="section-eyebrow">A Life Fully Lived</span>
+      <h2 class="section-title">Biography</h2>
+      <p class="section-sub">Pastor Mike Adesoji Alabi &nbsp;·&nbsp; July 10, 1968 — May 13, 2026</p>
+      <div class="gold-line"></div>
+    </div>
+
+    <!-- Section 1 -->
+    <div class="bio-section scroll-fade">
+      <div class="bio-section-num">01</div>
+      <h3 class="bio-section-title">Early Life &amp; Education</h3>
+      <div class="bio-text">
+        <p>Late Pastor Mike Alabi was born on <strong>July 10, 1968</strong> in Ibadan, Oyo State, to the family of Alhaji Idris Alabi Fadiora and Alhaja Rabiatu Apeke Fadiora. He was the last born of his family and was fondly loved by his parents because of his brilliance in school and in Qur&apos;an learning.</p>
+        <p>He attended <strong>Methodist Primary School, Akintola Road, Ibadan</strong> and <strong>Hamadiya Secondary School, Eleyele, Ibadan</strong>. His university education was at the <strong>University of Ibadan</strong>, where he obtained a B.Sc in Political Science and an M.Sc in International Relations.</p>
+        <p>He eventually lost his mother as a teenager and had to take care of himself — a season that shaped his remarkable resilience and strength of character.</p>
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="bio-section scroll-fade">
+      <div class="bio-section-num">02</div>
+      <h3 class="bio-section-title">Family Life</h3>
+      <div class="bio-text">
+        <p>Mike Alabi married <strong>Kemi Alabi</strong> and their union is blessed with children. He was a loving husband, a caring father, a disciplinarian, a devoted Christian, and a Soldier of Christ.</p>
+        <p>He lived a life of humility, sacrifice, kindness to humanity and love. He is survived by his wife, children, brothers, sisters, nieces and nephews.</p>
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="bio-section scroll-fade">
+      <div class="bio-section-num">03</div>
+      <h3 class="bio-section-title">His Faith &amp; Devotion</h3>
+      <div class="bio-text">
+        <p>Mike Alabi met Christ as a teenager — the first in his family to do so. As the last born, he had studied the Qur&apos;an and was positioned to become an Alfa. But he met Christ in a dramatic and unmistakable way.</p>
+        <p>As a radical Muslim teenager, he planned to secretly throw a stone to break the windscreen of a church bus parked on the roadside. But as soon as he picked up the stone, <em>everything turned white</em>. He could not see anything. He heard a voice say:</p>
+        <blockquote class="bio-quote">
+          &ldquo;Soji, Soji, why are you against me? What if you get to heaven and you realize that the God you are against is your Judge?&rdquo;
+        </blockquote>
+        <p>Then everything returned to normal. Soji was shaking to his bones. He ran home, covered himself and stayed indoors for a week. He later met Christ at a church programme where a persistent friend had invited him.</p>
+        <p>His confession of faith as a Christian caused his father — an Alhaji — to send him out of the family home as a teenager. Yet from that moment, he never looked back. He remained strong in the faith, committed to evangelism and to building the body of Christ, a pillar of support to many young Christians around the world.</p>
+      </div>
+    </div>
+
+    <!-- Section 4 -->
+    <div class="bio-section scroll-fade">
+      <div class="bio-section-num">04</div>
+      <h3 class="bio-section-title">Service</h3>
+      <div class="bio-text">
+        <p>Mike Alabi had consistently been in the service of God since he was born again. He served as a <strong>Sunday school teacher</strong>, <strong>Evangelism leader on Campus</strong> and during his National Youth Service year.</p>
+        <p>He was a pastor in <strong>Jesus Jewels International Church</strong> before relocating to Abuja, where he joined RCCG. Before his passing, he served as <strong>Pastor in Charge of Overflowing Grace Parish, Exclusive Addition Areas, Saburi, Abuja</strong>.</p>
+      </div>
+    </div>
+
+    <!-- Section 5 -->
+    <div class="bio-section scroll-fade">
+      <div class="bio-section-num">05</div>
+      <h3 class="bio-section-title">His Legacy</h3>
+      <div class="bio-text">
+        <p>Mike Alabi — fondly called <strong>&ldquo;Mr. Skill&rdquo;</strong> by all the children — was remembered by his children as both a friend and a disciplinarian. He was loved by all: the children, the teenagers, the youth, the women of Zion and the excellent men.</p>
+        <ul class="bio-list">
+          <li>He left a touch of care, hope and love on everyone he encountered.</li>
+          <li>He had a passion for lost souls and building the body of Christ.</li>
+          <li>He left a legacy of service, unwavering faith in God and love for all.</li>
+          <li>His memories of good deeds will continue to remain in our hearts.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Closing -->
+    <div class="scroll-fade" style="text-align:center;margin-top:3rem;padding:2rem;background:rgba(255,255,255,0.03);border:1px solid rgba(200,151,42,0.15);border-radius:8px;">
+      <div style="font-size:1.5rem;color:var(--gold);margin-bottom:0.75rem;">&#10013;</div>
+      <p style="font-family:'EB Garamond',serif;font-size:1.3rem;font-style:italic;color:var(--cream);line-height:1.8;">
+        &ldquo;I have fought a good fight, I have finished my course, I have kept the faith.&rdquo;
+      </p>
+      <p style="font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-top:0.6rem;">2 Timothy 4:7 &nbsp;&middot;&nbsp; KJV</p>
+      <p style="font-family:'EB Garamond',serif;font-size:1.05rem;font-style:italic;color:var(--text-dim);margin-top:1.5rem;">May his gentle soul rest in perfect peace.</p>
+    </div>
+
+  </div>
+</section>
+
+<style>
+.bio-section {
+  margin-bottom: 3rem;
+  padding-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(200,151,42,0.12);
+  position: relative;
+}
+.bio-section:last-of-type { border-bottom: none; }
+.bio-section-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 3rem;
+  font-weight: 800;
+  color: rgba(200,151,42,0.15);
+  line-height: 1;
+  margin-bottom: -0.5rem;
+}
+.bio-section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--gold);
+  margin-bottom: 1.2rem;
+  letter-spacing: 0.02em;
+}
+.bio-text p {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.12rem;
+  color: var(--cream);
+  line-height: 1.85;
+  margin-bottom: 1rem;
+}
+.bio-text p strong { color: var(--white); font-weight: 600; }
+.bio-text p em { color: var(--gold-light); font-style: italic; }
+.bio-quote {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.2rem;
+  font-style: italic;
+  color: var(--gold-light);
+  border-left: 3px solid var(--gold);
+  padding: 0.8rem 1.5rem;
+  margin: 1.2rem 0;
+  background: rgba(200,151,42,0.06);
+  border-radius: 0 4px 4px 0;
+  line-height: 1.7;
+}
+.bio-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+}
+.bio-list li {
+  font-family: 'EB Garamond', serif;
+  font-size: 1.12rem;
+  color: var(--cream);
+  line-height: 1.8;
+  padding: 0.4rem 0 0.4rem 1.5rem;
+  position: relative;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.bio-list li:last-child { border-bottom: none; }
+.bio-list li::before {
+  content: '✦';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-size: 0.7rem;
+  top: 0.6rem;
+}
 </style>
 
 </div>
@@ -951,6 +1142,145 @@ function activateStream(event, url, title) {
 // To go live, open browser console and run:
 // activateStream('thursday', 'YOUR_STREAM_URL', 'Service of Songs')
 // activateStream('friday', 'YOUR_STREAM_URL', 'Burial Service')
+
+
+// === GALLERY TABS ===
+function switchGalleryTab(tab) {
+  document.getElementById('gallery-panel-photos').style.display = tab==='photos' ? 'block' : 'none';
+  document.getElementById('gallery-panel-videos').style.display = tab==='videos' ? 'block' : 'none';
+  document.getElementById('gtab-photos').className = tab==='photos' ? 'btn-gold' : 'btn-outline';
+  document.getElementById('gtab-videos').className = tab==='videos' ? 'btn-gold' : 'btn-outline';
+  document.getElementById('gtab-photos').style.cssText = 'font-size:0.72rem;padding:0.5rem 1.4rem;';
+  document.getElementById('gtab-videos').style.cssText = 'font-size:0.72rem;padding:0.5rem 1.4rem;';
+  if (tab === 'videos') loadVideos();
+}
+
+function switchVideoAddTab(tab) {
+  document.getElementById('vpanel-url').style.display  = tab==='url'  ? 'block' : 'none';
+  document.getElementById('vpanel-file').style.display = tab==='file' ? 'block' : 'none';
+  document.getElementById('vtab-url').className  = tab==='url'  ? 'btn-gold' : 'btn-outline';
+  document.getElementById('vtab-file').className = tab==='file' ? 'btn-gold' : 'btn-outline';
+  document.getElementById('vtab-url').style.cssText  = 'font-size:0.72rem;padding:0.4rem 1rem;';
+  document.getElementById('vtab-file').style.cssText = 'font-size:0.72rem;padding:0.4rem 1rem;';
+}
+
+// === VIDEO GALLERY (API-backed) ===
+function getYTThumb(url) {
+  const m = url.match(/(?:v=|youtu\.be\/|\/embed\/)([a-zA-Z0-9_-]{11})/);
+  return m ? 'https://img.youtube.com/vi/' + m[1] + '/hqdefault.jpg' : null;
+}
+function getYTEmbed(url) {
+  const m1=url.match(/watch\?v=([a-zA-Z0-9_-]{11})/);
+  const m2=url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
+  const m3=url.match(/\/embed\/([a-zA-Z0-9_-]{11})/);
+  const id=m1?m1[1]:m2?m2[1]:m3?m3[1]:'';
+  return id ? 'https://www.youtube.com/embed/' + id : url;
+}
+function isLocal(url) { return url.startsWith('/uploads/'); }
+
+async function loadVideos() {
+  try {
+    const res = await fetch('/api/videos');
+    const vids = await res.json();
+    const grid  = document.getElementById('video-gallery-grid');
+    const empty = document.getElementById('video-empty');
+    grid.querySelectorAll('.video-card').forEach(c=>c.remove());
+    if (!vids.length) { if(empty) empty.style.display='block'; return; }
+    if (empty) empty.style.display='none';
+    vids.forEach(v=>{
+      const div=document.createElement('div');
+      div.className='video-card';
+      div.style.cssText='background:var(--navy-mid);border:1px solid rgba(200,151,42,0.2);border-radius:6px;overflow:hidden;cursor:pointer;';
+      const thumb = isLocal(v.url) ? null : getYTThumb(v.url);
+      const thumbHtml = thumb ? '<img src="'+thumb+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.85;pointer-events:none;">' : '<div style="position:absolute;inset:0;background:linear-gradient(135deg,var(--navy-mid),var(--navy-dark));"></div>';
+      div.innerHTML='<div style="position:relative;padding-bottom:56.25%;background:#000;overflow:hidden;" onclick="playVid(\''+encodeURIComponent(v.url)+'\',\''+encodeURIComponent(v.title||'')+'\')">'+thumbHtml+'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><div style="width:52px;height:52px;background:rgba(200,151,42,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;padding-left:4px;">&#9654;</div></div></div><div style="padding:0.85rem;"><div style="font-family:\'Playfair Display\',serif;font-size:0.95rem;color:var(--white);margin-bottom:0.25rem;">'+(v.title||'Untitled')+'</div><div style="font-size:0.68rem;color:var(--text-dim);">'+(isLocal(v.url)?'Uploaded video':'YouTube')+'</div></div>';
+      grid.appendChild(div);
+    });
+  } catch(e) { console.error(e); }
+}
+
+function playVid(eu, et) {
+  const url=decodeURIComponent(eu), title=decodeURIComponent(et);
+  const area=document.getElementById('stream-embed-area');
+  const ifr=document.getElementById('stream-iframe');
+  const ttl=document.getElementById('embed-title');
+  if (!area||!ifr) { window.open(url,'_blank'); return; }
+  if (ttl) ttl.textContent=title;
+  area.style.display='block';
+  if (isLocal(url)) {
+    ifr.src=''; ifr.style.display='none';
+    let vid=area.querySelector('video');
+    if (!vid) { vid=document.createElement('video'); vid.controls=true; vid.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;'; area.querySelector('div').appendChild(vid); }
+    vid.src=url; vid.style.display='block';
+  } else {
+    let vid=area.querySelector('video'); if(vid) vid.style.display='none';
+    ifr.style.display='block'; ifr.src=getYTEmbed(url)+'?autoplay=1';
+  }
+  area.scrollIntoView({behavior:'smooth'});
+}
+
+// === ADMIN VIDEO MANAGEMENT ===
+async function addVideoUrl() {
+  const url=document.getElementById('video-url-input').value.trim();
+  const title=document.getElementById('video-title-input').value.trim();
+  if (!url) { showToast('Please enter a URL.'); return; }
+  const fd=new FormData(); fd.append('url',url); fd.append('title',title);
+  const res=await fetch('/api/videos',{method:'POST',body:fd});
+  if (!res.ok) { const e=await res.json(); showToast(e.detail||'Error'); return; }
+  document.getElementById('video-url-input').value='';
+  document.getElementById('video-title-input').value='';
+  showToast('Video added!'); renderAdminVideos(); loadVideos();
+}
+
+async function uploadVideoFile() {
+  const fi=document.getElementById('video-file-input');
+  const title=document.getElementById('video-file-title').value.trim();
+  if (!fi.files[0]) { showToast('Select a video file.'); return; }
+  const prog=document.getElementById('video-upload-progress');
+  const status=document.getElementById('video-upload-status');
+  const bar=document.getElementById('video-upload-bar');
+  prog.style.display='block'; bar.style.width='10%';
+  status.textContent='Uploading video — may take a moment for large files...';
+  const fd=new FormData(); fd.append('file',fi.files[0]); fd.append('title',title);
+  let pct=10; const ticker=setInterval(()=>{ pct=Math.min(pct+2,88); bar.style.width=pct+'%'; },800);
+  try {
+    const res=await fetch('/api/videos/upload',{method:'POST',body:fd});
+    clearInterval(ticker); bar.style.width='100%';
+    if (!res.ok) { const e=await res.json(); status.textContent='Error: '+(e.detail||'Failed'); bar.style.background='#e74c3c'; return; }
+    status.textContent='Video uploaded!'; bar.style.background='#27ae60';
+    fi.value=''; document.getElementById('video-file-title').value='';
+    setTimeout(()=>{ prog.style.display='none'; bar.style.width='0%'; bar.style.background='var(--gold)'; },2500);
+    showToast('Video uploaded!'); renderAdminVideos(); loadVideos();
+  } catch(e) { clearInterval(ticker); status.textContent='Network error'; bar.style.background='#e74c3c'; }
+}
+
+async function renderAdminVideos() {
+  const list=document.getElementById('admin-video-list');
+  if (!list) return;
+  try {
+    const res=await fetch('/api/videos'); const vids=await res.json();
+    if (!vids.length) { list.innerHTML='<div style="font-size:0.82rem;color:var(--text-dim);font-style:italic;">No videos yet.</div>'; return; }
+    list.innerHTML='';
+    vids.forEach(v=>{
+      const div=document.createElement('div');
+      div.style.cssText='display:flex;align-items:center;gap:1rem;background:rgba(255,255,255,0.04);border:1px solid rgba(200,151,42,0.15);border-radius:6px;padding:0.85rem 1rem;margin-bottom:0.65rem;';
+      div.innerHTML='<div style="flex:1;"><div style="font-size:0.88rem;color:var(--white);font-weight:600;">'+v.title+'</div><div style="font-size:0.7rem;color:var(--text-dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:300px;">'+v.url+'</div></div><button onclick="removeVideo('+v.id+')" style="padding:0.28rem 0.65rem;font-size:0.62rem;font-weight:700;background:rgba(200,50,50,0.2);color:#f87171;border:1px solid rgba(200,50,50,0.4);border-radius:3px;cursor:pointer;">Remove</button>';
+      list.appendChild(div);
+    });
+  } catch(e) { console.error(e); }
+}
+
+async function removeVideo(id) {
+  if (!confirm('Remove this video?')) return;
+  await fetch('/api/videos/'+id,{method:'DELETE'});
+  showToast('Video removed'); renderAdminVideos(); loadVideos();
+}
+
+const _origShowV = window.showPage;
+window.showPage = function(name) {
+  _origShowV(name);
+  if (name === 'admin') renderAdminVideos();
+};
 
 </script>
 </body>

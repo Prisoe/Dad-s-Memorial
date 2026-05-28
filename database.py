@@ -36,6 +36,16 @@ class Photo(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 
+class Video(Base):
+    __tablename__ = "videos"
+    id         = Column(Integer, primary_key=True, index=True)
+    url        = Column(String(500), nullable=False)
+    title      = Column(String(200), nullable=True)
+    sort_order = Column(Integer, default=0)
+    active     = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+
 class RateLimit(Base):
     __tablename__ = "rate_limits"
     id         = Column(Integer, primary_key=True, index=True)

@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from PIL import Image, ExifTags
 import os, shutil, uuid, html, re
 
-from database import get_db, create_tables, Tribute, Photo, RateLimit
+from database import get_db, create_tables, Tribute, Photo, RateLimit, Video
 
 # ── App setup ──────────────────────────────────────────────
 BASE_DIR    = os.path.dirname(os.path.abspath(__file__))
@@ -157,6 +157,87 @@ def _seed_photos_if_empty():
     db.commit()
     db.close()
     print(f"✓ Seeded {len(files)} photos from {UPLOAD_DIR}")
+
+
+# ── Videos API ─────────────────────────────────────────────
+
+@app.get("/api/videos")
+def get_videos(db: Session = Depends(get_db)):
+    videos = db.query(Video).filter(Video.active == True)\
+               .order_by(Video.sort_order).all()
+    return [
+        {"id": v.id, "url": v.url, "title": v.title}
+        for v in videos
+    ]
+
+@app.post("/api/videos")
+async def add_video(
+    request: Request,
+    url:   str = Form(...),
+    title: str = Form(""),
+    db: Session = Depends(get_db)
+):
+    ip = request.client.host
+    if not check_rate_limit(ip, "video_add", db):
+        raise HTTPException(429, "Rate limit exceeded.")
+    url   = sanitize(url, 500)
+    title = sanitize(title, 200)
+    if not url:
+        raise HTTPException(400, "URL is required.")
+    max_order = db.query(Video).count()
+    video = Video(url=url, title=title or "Video", sort_order=max_order)
+    db.add(video)
+    db.commit()
+    record_rate_limit(ip, "video_add", db)
+    return {"success": True, "id": video.id}
+
+@app.post("/api/videos/upload")
+async def upload_video_file(
+    request: Request,
+    file:    UploadFile = File(...),
+    title:   str = Form(""),
+    db: Session = Depends(get_db)
+):
+    """Upload a video file directly."""
+    ip = request.client.host
+    if not check_rate_limit(ip, "video_upload", db):
+        raise HTTPException(429, "Rate limit exceeded.")
+
+    ext = os.path.splitext(file.filename)[1].lower()
+    if ext not in {'.mp4', '.mov', '.webm', '.avi', '.mkv'}:
+        raise HTTPException(400, "Only MP4, MOV, WEBM video files allowed.")
+
+    if file.size and file.size > 500 * 1024 * 1024:
+        raise HTTPException(400, "File too large (max 500MB).")
+
+    dest_name = f"video_{uuid.uuid4().hex[:12]}{ext}"
+    dest_path = os.path.join(UPLOAD_DIR, dest_name)
+
+    with open(dest_path, "wb") as f:
+        shutil.copyfileobj(file.file, f)
+
+    title = sanitize(title, 200) or os.path.splitext(file.filename)[0]
+    url   = f"/uploads/{dest_name}"
+    max_order = db.query(Video).count()
+    video = Video(url=url, title=title, sort_order=max_order)
+    db.add(video)
+    db.commit()
+    record_rate_limit(ip, "video_upload", db)
+    return {"success": True, "id": video.id, "url": url}
+
+@app.delete("/api/videos/{video_id}")
+def delete_video(video_id: int, db: Session = Depends(get_db)):
+    v = db.query(Video).filter(Video.id == video_id).first()
+    if not v:
+        raise HTTPException(404, "Video not found.")
+    # Remove file if local upload
+    if v.url.startswith("/uploads/"):
+        fpath = os.path.join(UPLOAD_DIR, os.path.basename(v.url))
+        if os.path.exists(fpath):
+            os.remove(fpath)
+    db.delete(v)
+    db.commit()
+    return {"success": True}
 
 
 @app.get("/", response_class=HTMLResponse)
