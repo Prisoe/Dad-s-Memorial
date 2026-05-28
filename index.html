@@ -440,8 +440,16 @@ img { -webkit-user-drag:none; user-select:none; }
     <!-- Video Management -->
     <div style="margin-top:3rem;" class="scroll-fade">
       <div style="font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--gold);margin-bottom:0.5rem;">Video Manager</div>
-      <p style="font-size:0.82rem;color:var(--text-dim);margin-bottom:1.5rem;">Add YouTube or video links to the gallery video tab.</p>
-      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,151,42,0.2);border-radius:8px;padding:1.5rem;margin-bottom:1.5rem;">
+      <p style="font-size:0.82rem;color:var(--text-dim);margin-bottom:1.5rem;">Add YouTube links or upload video files to the gallery.</p>
+
+      <!-- Tabs -->
+      <div style="display:flex;gap:0.75rem;margin-bottom:1rem;">
+        <button onclick="switchVideoAddTab('url')" id="vtab-url" class="btn-gold" style="font-size:0.72rem;padding:0.4rem 1rem;">&#128279; YouTube Link</button>
+        <button onclick="switchVideoAddTab('file')" id="vtab-file" class="btn-outline" style="font-size:0.72rem;padding:0.4rem 1rem;">&#127916; Upload File</button>
+      </div>
+
+      <!-- URL panel -->
+      <div id="vpanel-url" style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,151,42,0.2);border-radius:8px;padding:1.5rem;margin-bottom:1rem;">
         <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;">
           <div style="flex:2;min-width:200px;">
             <label class="form-label">YouTube / Video URL</label>
@@ -449,11 +457,33 @@ img { -webkit-user-drag:none; user-select:none; }
           </div>
           <div style="flex:1;min-width:150px;">
             <label class="form-label">Title</label>
-            <input class="form-input" id="video-title-input" type="text" placeholder="e.g. Service of Songs 2026" maxlength="100">
+            <input class="form-input" id="video-title-input" type="text" placeholder="e.g. Service of Songs" maxlength="100">
           </div>
-          <button class="btn-gold" onclick="addVideo()">Add Video</button>
+          <button class="btn-gold" onclick="addVideoUrl()">Add</button>
         </div>
       </div>
+
+      <!-- File upload panel -->
+      <div id="vpanel-file" style="display:none;background:rgba(255,255,255,0.04);border:1px solid rgba(200,151,42,0.2);border-radius:8px;padding:1.5rem;margin-bottom:1rem;">
+        <div style="display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end;">
+          <div style="flex:2;min-width:200px;">
+            <label class="form-label">Video File (MP4, MOV, WEBM — max 500MB)</label>
+            <input type="file" id="video-file-input" accept=".mp4,.mov,.webm,.avi,.mkv" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(200,151,42,0.2);border-radius:4px;padding:0.65rem 1rem;color:var(--white);font-size:0.85rem;">
+          </div>
+          <div style="flex:1;min-width:150px;">
+            <label class="form-label">Title</label>
+            <input class="form-input" id="video-file-title" type="text" placeholder="e.g. Burial Service" maxlength="100">
+          </div>
+          <button class="btn-gold" onclick="uploadVideoFile()">&#128228; Upload</button>
+        </div>
+        <div id="video-upload-progress" style="display:none;margin-top:0.8rem;">
+          <div style="font-size:0.82rem;color:var(--gold-light);margin-bottom:0.4rem;" id="video-upload-status">Uploading...</div>
+          <div style="width:100%;height:4px;background:rgba(255,255,255,0.1);border-radius:2px;overflow:hidden;">
+            <div id="video-upload-bar" style="height:100%;background:var(--gold);width:0%;transition:width 0.3s;animation:bulkPulse 1.5s ease-in-out infinite;"></div>
+          </div>
+        </div>
+      </div>
+
       <div id="admin-video-list"></div>
     </div>
 
