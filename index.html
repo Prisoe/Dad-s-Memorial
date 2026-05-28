@@ -1141,7 +1141,9 @@ function openStream(url) {
   const isEmbeddable = url.includes('watch?v=') || url.includes('youtu.be/') || url.includes('/live/') || url.includes('facebook.com/') && url.includes('/videos/');
   if (isEmbeddable) {
     let embedUrl = url;
-    embedUrl = embedUrl.replace('watch?v=', 'embed/').replace('youtu.be/', 'youtube.com/embed/').replace('/live/', '/embed/');
+    // Strip tracking params then convert
+    embedUrl = embedUrl.split('?')[0].split('&')[0];
+    embedUrl = embedUrl.replace('/watch?v=', '/embed/').replace('youtu.be/', 'youtube.com/embed/').replace('/live/', '/embed/');
     iframe.src = embedUrl;
     embedArea.style.display = 'block';
     embedArea.scrollIntoView({behavior:'smooth'});
@@ -1196,14 +1198,16 @@ function switchVideoAddTab(tab) {
 
 // === VIDEO GALLERY (API-backed) ===
 function getYTThumb(url) {
-  const m = url.match(/(?:v=|youtu\.be\/|\/embed\/)([a-zA-Z0-9_-]{11})/);
+  const m = url.match(/(?:v=|youtu\.be\/|\/embed\/|\/live\/)([a-zA-Z0-9_-]{11})/);
   return m ? 'https://img.youtube.com/vi/' + m[1] + '/hqdefault.jpg' : null;
 }
 function getYTEmbed(url) {
+  url = url.split('?')[0].split('&')[0];
   const m1=url.match(/watch\?v=([a-zA-Z0-9_-]{11})/);
   const m2=url.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/);
   const m3=url.match(/\/embed\/([a-zA-Z0-9_-]{11})/);
-  const id=m1?m1[1]:m2?m2[1]:m3?m3[1]:'';
+  const m4=url.match(/\/live\/([a-zA-Z0-9_-]{11})/);
+  const id=m1?m1[1]:m2?m2[1]:m3?m3[1]:m4?m4[1]:'';
   return id ? 'https://www.youtube.com/embed/' + id : url;
 }
 function isLocal(url) { return url.startsWith('/uploads/'); }
