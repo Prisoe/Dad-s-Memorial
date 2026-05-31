@@ -332,8 +332,23 @@ img { -webkit-user-drag:none; user-select:none; }
 
     <!-- Videos grid -->
     <div id="gallery-panel-videos" style="display:none;">
-      <div id="video-gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.2rem;">
-        <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-dim);font-style:italic;font-family:'EB Garamond',serif;" id="video-empty">No videos added yet. Add video links from the admin panel.</div>
+
+      <!-- Inline video player -->
+      <div id="gallery-video-player" style="display:none;margin-bottom:2rem;background:rgba(255,255,255,0.04);border:1px solid rgba(200,151,42,0.2);border-radius:8px;overflow:hidden;">
+        <div style="padding:0.85rem 1.2rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(200,151,42,0.1);">
+          <span id="gallery-video-title" style="font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--gold);">Now Playing</span>
+          <button onclick="closeGalleryPlayer()" style="background:none;border:none;color:var(--text-dim);cursor:pointer;font-size:1.1rem;padding:0.2rem 0.5rem;">&#10005;</button>
+        </div>
+        <div style="position:relative;padding-bottom:56.25%;background:#000;overflow:hidden;">
+          <video id="gallery-video-el" controls style="position:absolute;top:0;left:0;width:100%;height:100%;background:#000;" preload="metadata">
+            Your browser does not support video playback.
+          </video>
+        </div>
+      </div>
+
+      <!-- Video cards grid -->
+      <div id="video-gallery-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.2rem;">
+        <div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--text-dim);font-style:italic;font-family:'EB Garamond',serif;" id="video-empty">No videos yet. Upload videos from the admin panel.</div>
       </div>
     </div>
   </div>
@@ -1214,43 +1229,54 @@ function isLocal(url) { return url.startsWith('/uploads/'); }
 
 async function loadVideos() {
   try {
-    const res = await fetch('/api/videos');
+    const res  = await fetch('/api/videos');
     const vids = await res.json();
     const grid  = document.getElementById('video-gallery-grid');
     const empty = document.getElementById('video-empty');
-    grid.querySelectorAll('.video-card').forEach(c=>c.remove());
+    grid.querySelectorAll('.video-card').forEach(c => c.remove());
     if (!vids.length) { if(empty) empty.style.display='block'; return; }
     if (empty) empty.style.display='none';
-    vids.forEach(v=>{
+    vids.forEach(v => {
+      const eu=encodeURIComponent(v.url), et=encodeURIComponent(v.title||'');
       const div=document.createElement('div');
       div.className='video-card';
       div.style.cssText='background:var(--navy-mid);border:1px solid rgba(200,151,42,0.2);border-radius:6px;overflow:hidden;cursor:pointer;';
-      const thumb = isLocal(v.url) ? null : getYTThumb(v.url);
-      const thumbHtml = thumb ? '<img src="'+thumb+'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0.85;pointer-events:none;">' : '<div style="position:absolute;inset:0;background:linear-gradient(135deg,var(--navy-mid),var(--navy-dark));"></div>';
-      div.innerHTML='<div style="position:relative;padding-bottom:56.25%;background:#000;overflow:hidden;" onclick="playVid(\''+encodeURIComponent(v.url)+'\',\''+encodeURIComponent(v.title||'')+'\')">'+thumbHtml+'<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><div style="width:52px;height:52px;background:rgba(200,151,42,0.9);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;padding-left:4px;">&#9654;</div></div></div><div style="padding:0.85rem;"><div style="font-family:\'Playfair Display\',serif;font-size:0.95rem;color:var(--white);margin-bottom:0.25rem;">'+(v.title||'Untitled')+'</div><div style="font-size:0.68rem;color:var(--text-dim);">'+(isLocal(v.url)?'Uploaded video':'YouTube')+'</div></div>';
+      div.innerHTML='<div onclick="playVid(''+eu+'',''+et+'')" style="position:relative;padding-bottom:56.25%;background:#0a0a14;overflow:hidden;"><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;"><div style="width:56px;height:56px;background:rgba(200,151,42,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;padding-left:5px;">&#9654;</div><div style="font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.1em;text-transform:uppercase;">Click to play</div></div></div><div style="padding:0.9rem 1rem;"><div style="font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--white);margin-bottom:0.2rem;">'+(v.title||'Untitled')+'</div><div style="font-size:0.68rem;color:var(--gold);letter-spacing:0.08em;text-transform:uppercase;">&#127916; Video</div></div>';
       grid.appendChild(div);
     });
-  } catch(e) { console.error(e); }
+  } catch(e) { console.error('loadVideos error:',e); }
 }
 
 function playVid(eu, et) {
-  const url=decodeURIComponent(eu), title=decodeURIComponent(et);
-  const area=document.getElementById('stream-embed-area');
-  const ifr=document.getElementById('stream-iframe');
-  const ttl=document.getElementById('embed-title');
-  if (!area||!ifr) { window.open(url,'_blank'); return; }
-  if (ttl) ttl.textContent=title;
-  area.style.display='block';
-  if (isLocal(url)) {
-    ifr.src=''; ifr.style.display='none';
-    let vid=area.querySelector('video');
-    if (!vid) { vid=document.createElement('video'); vid.controls=true; vid.style.cssText='position:absolute;top:0;left:0;width:100%;height:100%;'; area.querySelector('div').appendChild(vid); }
-    vid.src=url; vid.style.display='block';
-  } else {
-    let vid=area.querySelector('video'); if(vid) vid.style.display='none';
-    ifr.style.display='block'; ifr.src=getYTEmbed(url)+'?autoplay=1';
-  }
-  area.scrollIntoView({behavior:'smooth'});
+  const url   = decodeURIComponent(eu);
+  const title = decodeURIComponent(et);
+
+  const player   = document.getElementById('gallery-video-player');
+  const videoEl  = document.getElementById('gallery-video-el');
+  const titleEl  = document.getElementById('gallery-video-title');
+
+  if (!player || !videoEl) { window.open(url, '_blank'); return; }
+
+  // Set title
+  if (titleEl) titleEl.textContent = title || 'Now Playing';
+
+  // Set video source and play
+  videoEl.src = url;
+  videoEl.load();
+  videoEl.play().catch(e => console.log('Autoplay blocked:', e));
+
+  // Show player
+  player.style.display = 'block';
+
+  // Scroll player into view
+  player.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function closeGalleryPlayer() {
+  const player  = document.getElementById('gallery-video-player');
+  const videoEl = document.getElementById('gallery-video-el');
+  if (videoEl) { videoEl.pause(); videoEl.src = ''; }
+  if (player)  player.style.display = 'none';
 }
 
 // === ADMIN VIDEO MANAGEMENT ===
