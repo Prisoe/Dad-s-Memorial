@@ -1237,38 +1237,38 @@ async function loadVideos() {
     if (!vids.length) { if(empty) empty.style.display='block'; return; }
     if (empty) empty.style.display='none';
     vids.forEach(v => {
-      const eu=encodeURIComponent(v.url), et=encodeURIComponent(v.title||'');
-      const div=document.createElement('div');
-      div.className='video-card';
-      div.style.cssText='background:var(--navy-mid);border:1px solid rgba(200,151,42,0.2);border-radius:6px;overflow:hidden;cursor:pointer;';
-      div.innerHTML='<div onclick="playVid(''+eu+'',''+et+'')" style="position:relative;padding-bottom:56.25%;background:#0a0a14;overflow:hidden;"><div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;"><div style="width:56px;height:56px;background:rgba(200,151,42,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;padding-left:5px;">&#9654;</div><div style="font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.1em;text-transform:uppercase;">Click to play</div></div></div><div style="padding:0.9rem 1rem;"><div style="font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--white);margin-bottom:0.2rem;">'+(v.title||'Untitled')+'</div><div style="font-size:0.68rem;color:var(--gold);letter-spacing:0.08em;text-transform:uppercase;">&#127916; Video</div></div>';
+      const div = document.createElement('div');
+      div.className = 'video-card';
+      div.style.cssText = 'background:var(--navy-mid);border:1px solid rgba(200,151,42,0.2);border-radius:6px;overflow:hidden;cursor:pointer;';
+      const eu = encodeURIComponent(v.url);
+      const et = encodeURIComponent(v.title || '');
+      div.innerHTML = `
+        <div onclick="playVid(decodeURIComponent('${eu}'),decodeURIComponent('${et}'))"
+             style="position:relative;padding-bottom:56.25%;background:#0a0a14;overflow:hidden;">
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;">
+            <div style="width:56px;height:56px;background:rgba(200,151,42,0.85);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;padding-left:5px;">&#9654;</div>
+            <div style="font-size:0.65rem;color:rgba(255,255,255,0.4);letter-spacing:0.1em;text-transform:uppercase;">Click to play</div>
+          </div>
+        </div>
+        <div style="padding:0.9rem 1rem;">
+          <div style="font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--white);margin-bottom:0.2rem;">${v.title || 'Untitled'}</div>
+          <div style="font-size:0.68rem;color:var(--gold);letter-spacing:0.08em;text-transform:uppercase;">&#127916; Video</div>
+        </div>`;
       grid.appendChild(div);
     });
-  } catch(e) { console.error('loadVideos error:',e); }
+  } catch(e) { console.error('loadVideos error:', e); }
 }
 
-function playVid(eu, et) {
-  const url   = decodeURIComponent(eu);
-  const title = decodeURIComponent(et);
-
-  const player   = document.getElementById('gallery-video-player');
-  const videoEl  = document.getElementById('gallery-video-el');
-  const titleEl  = document.getElementById('gallery-video-title');
-
+function playVid(url, title) {
+  const player  = document.getElementById('gallery-video-player');
+  const videoEl = document.getElementById('gallery-video-el');
+  const titleEl = document.getElementById('gallery-video-title');
   if (!player || !videoEl) { window.open(url, '_blank'); return; }
-
-  // Set title
   if (titleEl) titleEl.textContent = title || 'Now Playing';
-
-  // Set video source and play
   videoEl.src = url;
   videoEl.load();
-  videoEl.play().catch(e => console.log('Autoplay blocked:', e));
-
-  // Show player
+  videoEl.play().catch(e => console.log('Autoplay blocked, click play:', e));
   player.style.display = 'block';
-
-  // Scroll player into view
   player.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
